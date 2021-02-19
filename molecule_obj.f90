@@ -82,6 +82,37 @@ contains
         end do
     end subroutine translateMolecule
 
+    subroutine rotateMolecule(m, angleInDegrees)
+        class(molecule), intent(inout) :: m
+        real, intent(in) :: angleInDegrees
+
+        type(atom) :: firstAtom, secondAtom, newAtom
+        real, dimension(3) :: u, unorm
+        real :: angleInRadians, PI
+        integer :: atomIndex
+
+        PI = 4.D0 * DATAN(1.D0)
+        angleInRadians = angleInDegrees * PI / 180
+
+        call furthestAtoms(m, firstAtom, secondAtom)
+
+        u = firstAtom - secondAtom
+        unorm = u / norm2(u)
+
+        m%rotationVector = m%rotationVector + u
+
+        do atomIndex = 1, getNumberOfAtoms(m)
+            newAtom = getAtom(m, atomIndex)
+            call rotateAtom(newAtom, u, unorm, angleInRadians, getCoordinates(secondAtom))
+            call setAtom(m, atomIndex, newAtom)
+        end do
+
+        print '(a35,x,3(f8.3))', "Axis vector: ", u
+        print '(a35,x,3(f8.3))', "Normalized Axis vector: ", unorm
+        print *, firstAtom
+        print *, secondAtom
+    end subroutine rotateMolecule
+
     integer function getNumberOfAtoms(m) result(numberOfAtoms)
         class(molecule), intent(in) :: m
 
