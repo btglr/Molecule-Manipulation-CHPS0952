@@ -79,33 +79,16 @@ contains
         forall(i = 1:3, j = 1:3) identityMatrix(i, j) = (i / j) * (j / i)
 
         ! https://mathworld.wolfram.com/RodriguesRotationFormula.html
-        wRodrigues = reshape([0.0, unorm(3), -unorm(2), -unorm(3), 0.0, unorm(1), unorm(2), -unorm(1), 0.0], shape(wRodrigues))
+        wRodrigues = reshape([0.0, unorm(3), -unorm(2), -unorm(3), 0.0, unorm(1), unorm(2), -unorm(1), 0.0], &
+                shape(wRodrigues))
 
         rotationMatrix = identityMatrix + sin(theta) * wRodrigues + (1.0 - cos(theta)) * &
                 matMul(wRodrigues, wRodrigues)
 
         currentCoordinates = getCoordinates(at)
-!        translatedPoint = currentCoordinates - u
-
-        currentCoordinates = currentCoordinates - tail
-        newCoordinates = matMul(rotationMatrix, currentCoordinates)
-        newCoordinates = newCoordinates + tail
-
-        !        rotationMatrix = reshape([ cos(theta) + unorm(1) * unorm(1) * (1 - cos(theta)), &
-        !                unorm(1) * unorm(2) * (1 - cos(theta)) + unorm(3) * sin(theta), &
-        !                unorm(1) * unorm(3) * (1 - cos(theta)) - unorm(2) * sin(theta), &
-        !                unorm(1) * unorm(2) * (1 - cos(theta)) - unorm(3) * sin(theta), &
-        !                unorm(2) * unorm(2) * (1 - cos(theta)) + cos(theta), &
-        !                unorm(2) * unorm(3) * (1 - cos(theta)) + unorm(1) * sin(theta), &
-        !                unorm(1) * unorm(3) * (1 - cos(theta)) + unorm(2) * sin(theta), &
-        !                unorm(2) * unorm(3) * (1 - cos(theta)) - unorm(1) * sin(theta), &
-        !                unorm(3) * unorm(3) * (1 - cos(theta)) + cos(theta)], shape(rotationMatrix))
-        !
-        !        currentCoordinates = getCoordinates(at)
-        !        translatedPoint = currentCoordinates - u
-        !
-        !        newCoordinates = matMul(rotationMatrix, translatedPoint)
-        !        newCoordinates = newCoordinates + u
+        translatedPoint = currentCoordinates - tail
+        translatedPoint = matMul(rotationMatrix, translatedPoint)
+        newCoordinates = translatedPoint + tail
 
         call setCoordinates(at, newCoordinates)
     end subroutine rotateAtom
