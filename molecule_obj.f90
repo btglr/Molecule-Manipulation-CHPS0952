@@ -5,7 +5,7 @@ module molecule_obj
         type(atom), dimension(:), allocatable, private :: atoms
         integer, private :: numberOfAtoms
         real, dimension(3), private :: translationVector
-        real, dimension(3), private :: rotationVector
+        real, private :: rotationAngle
     contains
         procedure :: displayMolecule
         procedure :: initMolecule
@@ -31,7 +31,7 @@ contains
 
         m%numberOfAtoms = 0
         m%translationVector = 0.0
-        m%rotationVector = 0.0
+        m%rotationAngle = 0.0
     end subroutine initMolecule
 
     subroutine addAtom(m, at)
@@ -128,7 +128,7 @@ contains
         u = firstAtom - secondAtom
         unorm = u / norm2(u)
 
-        m%rotationVector = m%rotationVector + u
+        m%rotationAngle = m%rotationAngle + angleInDegrees
 
         do atomIndex = 1, getNumberOfAtoms(m)
             call rotateAtom(m%atoms(atomIndex), u, unorm, angleInRadians, getCoordinates(secondAtom))
@@ -240,19 +240,17 @@ contains
         m%translationVector = translationVector
     end subroutine setTranslationVector
 
-    function getRotationVector(m) result(rotationVector)
+    type(real) function getRotationAngle(m) result(rotationVector)
         class(molecule), intent(in) :: m
 
-        real, dimension(3) :: rotationVector
+        rotationAngle = m%rotationAngle
+    end function getRotationAngle
 
-        rotationVector = m%rotationVector
-    end function getRotationVector
-
-    subroutine setRotationVector(m, rotationVector)
+    subroutine setRotationAngle(m, rotationAngle)
         class(molecule), intent(inout) :: m
-        real, dimension(3), intent(in) :: rotationVector
+        real, intent(in) :: rotationAngle
 
-        m%rotationVector = rotationVector
-    end subroutine setRotationVector
+        m%rotationAngle = rotationAngle
+    end subroutine setRotationAngle
 
 end module molecule_obj
