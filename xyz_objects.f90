@@ -33,11 +33,11 @@ contains
         translationVector = getTranslationVector(m)
         rotationVector = getRotationVector(m)
 
-        write(comment, '(a,x,3(f8.3),x,a,x,3(f8.3))') "Translation: ", translationVector, ", Rotation: ", rotationVector
+        write(comment, '(a15,x,3(f8.3),x,a15,x,3(f8.3))') "Translation: ", translationVector, ", Rotation: ", rotationVector
         write (nbAtomsC, '(i8)') nbAtoms
 
         write(unit, '(a)') adjustl(nbAtomsC)
-        write(unit, '(a, 1x, a)') "Commentaire :", comment
+        write(unit, '(a)') comment
 
         do atomIndex = 1, nbAtoms
             at = getAtom(m, atomIndex)
@@ -62,6 +62,7 @@ contains
         logical :: exist
         real :: x, y, z
         type(atom) :: currentAtom
+        real, dimension(3) :: translationVector, rotationVector
 
         inquire(file = fileName, exist = exist)
 
@@ -82,7 +83,7 @@ contains
         call initMolecule(m, numberOfAtoms)
 
         ! La ligne du commentaire
-        read(unit, '(a)', iostat = end) line
+        read(unit, '(16x,3(f8.3),17x,3(f8.3))', iostat = end) translationVector, rotationVector
 
         do
             read(unit, '(a)', iostat = end) line
