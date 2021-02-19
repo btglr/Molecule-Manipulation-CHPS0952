@@ -64,21 +64,17 @@ contains
         end if
     end subroutine removeMolecule
 
-    subroutine translateMolecule(originalMolecule, translatedMolecule, translationVector)
-        class(molecule), intent(in) :: originalMolecule
-        class(molecule), intent(inout) :: translatedMolecule
+    subroutine translateMolecule(m, translationVector)
+        class(molecule), intent(inout) :: m
         real, dimension(:), intent(in) :: translationVector
         integer :: atomIndex
 
         print *, "Translation vector:", translationVector
 
-        translatedMolecule%translationVector = translatedMolecule%translationVector + translationVector
+        m%translationVector = m%translationVector + translationVector
 
-        call initMolecule(translatedMolecule, originalMolecule%numberOfAtoms)
-
-        do atomIndex = 1, originalMolecule%numberOfAtoms
-            call addAtom(translatedMolecule, originalMolecule%atoms(atomIndex))
-            call translateAtom(translatedMolecule%atoms(atomIndex), translationVector)
+        do atomIndex = 1, m%numberOfAtoms
+            call translateAtom(m%atoms(atomIndex), translationVector)
         end do
     end subroutine translateMolecule
 

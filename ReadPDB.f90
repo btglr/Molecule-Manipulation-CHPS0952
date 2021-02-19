@@ -10,7 +10,7 @@ program ReadPDBObject
     real :: x, y, z
     type(atom) :: currentAtom
     type(atom), dimension(:), allocatable :: atoms
-    type(molecule) :: currentMolecule, newMolecule
+    type(molecule) :: currentMolecule
     real, dimension(3) :: translationVector
 
     if(iargc() /= 2) then
@@ -68,12 +68,11 @@ program ReadPDBObject
 !    print *, currentMolecule
 
     call random_number(translationVector)
-    call translateMolecule(currentMolecule, newMolecule, translationVector)
+    call translateMolecule(currentMolecule, translationVector)
 
-    call writeXYZ(newMolecule, outputFile)
+    call writeXYZ(currentMolecule, outputFile)
 
     call removeMolecule(currentMolecule)
-    call removeMolecule(newMolecule)
 
     close(unit)
 end program ReadPDBObject
