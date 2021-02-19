@@ -2,7 +2,6 @@ program MoleculeManipulation
     use atom_obj
     use molecule_obj
     use xyz_handler
-    use molecule_func
 
     implicit none
 

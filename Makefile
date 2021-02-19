@@ -12,7 +12,7 @@ ReadPDB: atom_obj.o molecule_obj.o xyz_objects.o ReadPDB.o
 	-@echo "Linking    $(@)"
 	-@$(CC) -o $@.out $+
 
-MoleculeManipulation: atom_obj.o molecule_obj.o xyz_objects.o molecule_func.o MoleculeManipulation.o
+MoleculeManipulation: atom_obj.o molecule_obj.o xyz_objects.o MoleculeManipulation.o
 	-@echo "Linking    $(@)"
 	-@$(CC) -o $@.out $+
 
