@@ -113,27 +113,6 @@ contains
         print *, secondAtom
     end subroutine rotateMolecule
 
-    integer function getNumberOfAtoms(m) result(numberOfAtoms)
-        class(molecule), intent(in) :: m
-
-        numberOfAtoms = m%numberOfAtoms
-    end function getNumberOfAtoms
-
-    type(atom) function getAtom(m, atomIndex) result(at)
-        class(molecule), intent(in) :: m
-        integer, intent(in) :: atomIndex
-
-        at = m%atoms(atomIndex)
-    end function getAtom
-
-    subroutine setAtom(m, atomIndex, at)
-        class(molecule), intent(inout) :: m
-        integer, intent(in) :: atomIndex
-        type(atom), intent(in) :: at
-
-        m%atoms(atomIndex) = at
-    end subroutine setAtom
-
     real function computeRMSD(m1, m2, type) result(rmsd)
         class(molecule), intent(in) :: m1
         class(molecule), intent(in) :: m2
@@ -197,4 +176,26 @@ contains
 
         rmsd = sqrt(sum(difference ** 2) / numberOfAtoms)
     end function computeRMSD
+
+    integer function getNumberOfAtoms(m) result(numberOfAtoms)
+        class(molecule), intent(in) :: m
+
+        numberOfAtoms = m%numberOfAtoms
+    end function getNumberOfAtoms
+
+    type(atom) function getAtom(m, atomIndex) result(at)
+        class(molecule), intent(in) :: m
+        integer, intent(in) :: atomIndex
+
+        at = m%atoms(atomIndex)
+    end function getAtom
+
+    subroutine setAtom(m, atomIndex, at)
+        class(molecule), intent(inout) :: m
+        integer, intent(in) :: atomIndex
+        type(atom), intent(in) :: at
+
+        m%atoms(atomIndex) = at
+    end subroutine setAtom
+
 end module molecule_obj
