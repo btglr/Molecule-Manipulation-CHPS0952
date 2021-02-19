@@ -85,6 +85,9 @@ contains
         ! La ligne du commentaire
         read(unit, '(16x,3(f8.3),17x,3(f8.3))', iostat = end) translationVector, rotationVector
 
+        call setTranslationVector(m, translationVector)
+        call setRotationVector(m, rotationVector)
+
         do
             read(unit, '(a)', iostat = end) line
             if(end /= 0) then

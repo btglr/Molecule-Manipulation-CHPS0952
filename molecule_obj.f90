@@ -235,6 +235,13 @@ contains
         translationVector = m%translationVector
     end function getTranslationVector
 
+    subroutine setTranslationVector(m, translationVector)
+        class(molecule), intent(inout) :: m
+        real, dimension(3), intent(in) :: translationVector
+
+        m%translationVector = translationVector
+    end subroutine setTranslationVector
+
     function getRotationVector(m) result(rotationVector)
         class(molecule), intent(in) :: m
 
@@ -242,5 +249,12 @@ contains
 
         rotationVector = m%rotationVector
     end function getRotationVector
+
+    subroutine setRotationVector(m, rotationVector)
+        class(molecule), intent(inout) :: m
+        real, dimension(3), intent(in) :: rotationVector
+
+        m%rotationVector = rotationVector
+    end subroutine setRotationVector
 
 end module molecule_obj
