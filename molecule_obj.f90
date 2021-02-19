@@ -131,9 +131,7 @@ contains
         m%rotationVector = m%rotationVector + u
 
         do atomIndex = 1, getNumberOfAtoms(m)
-            newAtom = getAtom(m, atomIndex)
-            call rotateAtom(newAtom, u, unorm, angleInRadians, getCoordinates(secondAtom))
-            call setAtom(m, atomIndex, newAtom)
+            call rotateAtom(m%atoms(atomIndex), u, unorm, angleInRadians, getCoordinates(secondAtom))
         end do
 
         print '(a35,x,3(f8.3))', "Axis vector: ", u
