@@ -231,4 +231,20 @@ contains
         m%atoms(atomIndex) = at
     end subroutine setAtom
 
+    function getTranslationVector(m) result(translationVector)
+        class(molecule), intent(in) :: m
+
+        real, dimension(3) :: translationVector
+
+        translationVector = m%translationVector
+    end function getTranslationVector
+
+    function getRotationVector(m) result(rotationVector)
+        class(molecule), intent(in) :: m
+
+        real, dimension(3) :: rotationVector
+
+        rotationVector = m%rotationVector
+    end function getRotationVector
+
 end module molecule_obj

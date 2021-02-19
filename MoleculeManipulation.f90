@@ -24,5 +24,5 @@ program MoleculeManipulation
 
     call rotateMolecule(firstMolecule, 180.0)
 
-    call writeXYZ(firstMolecule, "test.xyz", "Test")
+    call writeXYZ(firstMolecule, "test.xyz")
 end program MoleculeManipulation

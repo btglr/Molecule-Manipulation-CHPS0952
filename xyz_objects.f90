@@ -4,14 +4,16 @@ module xyz_handler
 
 contains
 
-    subroutine writeXYZ(m, filename, comment)
+    subroutine writeXYZ(m, filename)
         class(molecule), intent(in) :: m
-        character(*), intent(in) :: fileName, comment
+        character(*), intent(in) :: fileName
+
         character(len = 8) :: nbAtomsC, atomName
+        character(len = 512) :: comment
         integer :: ok, atomIndex, unit, nbAtoms
         logical :: exist
         type(atom) :: at
-        real, dimension(3) :: atomCoordinates
+        real, dimension(3) :: atomCoordinates, translationVector, rotationVector
 
         unit = 11
         inquire(file = fileName, exist = exist)
@@ -28,7 +30,10 @@ contains
         end if
 
         nbAtoms = getNumberOfAtoms(m)
+        translationVector = getTranslationVector(m)
+        rotationVector = getRotationVector(m)
 
+        write(comment, '(a,x,3(f8.3),x,a,x,3(f8.3))') "Translation: ", translationVector, ", Rotation: ", rotationVector
         write (nbAtomsC, '(i8)') nbAtoms
 
         write(unit, '(a)') adjustl(nbAtomsC)

@@ -70,7 +70,7 @@ program ReadPDBObject
     call random_number(translationVector)
     call translateMolecule(currentMolecule, newMolecule, translationVector)
 
-    call writeXYZ(newMolecule, outputFile, "Test")
+    call writeXYZ(newMolecule, outputFile)
 
     call removeMolecule(currentMolecule)
     call removeMolecule(newMolecule)
