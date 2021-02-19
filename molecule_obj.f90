@@ -72,7 +72,7 @@ contains
 
         print *, "Translation vector:", translationVector
 
-        m%translationVector = m%translationVector + translationVector
+        translatedMolecule%translationVector = translatedMolecule%translationVector + translationVector
 
         call initMolecule(translatedMolecule, originalMolecule%numberOfAtoms)
 
