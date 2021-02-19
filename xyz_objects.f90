@@ -33,7 +33,9 @@ contains
         translationVector = getTranslationVector(m)
         rotationVector = getRotationVector(m)
 
-        write(comment, '(a15,x,3(f8.3),x,a15,x,3(f8.3))') "Translation: ", translationVector, ", Rotation: ", rotationVector
+        write(comment, '(a15,3(f8.3),x,a15,3(f8.3))') &
+                "Translation: ", translationVector, &
+                "Rotation: ", rotationVector
         write (nbAtomsC, '(i8)') nbAtoms
 
         write(unit, '(a)') adjustl(nbAtomsC)
@@ -83,7 +85,7 @@ contains
         call initMolecule(m, numberOfAtoms)
 
         ! La ligne du commentaire
-        read(unit, '(16x,3(f8.3),17x,3(f8.3))', iostat = end) translationVector, rotationVector
+        read(unit, '(15x,3(f8.3),16x,3(f8.3))', iostat = end) translationVector, rotationVector
 
         call setTranslationVector(m, translationVector)
         call setRotationVector(m, rotationVector)
