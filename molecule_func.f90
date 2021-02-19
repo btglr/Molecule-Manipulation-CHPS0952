@@ -53,6 +53,8 @@ contains
         u = firstAtom - secondAtom
         unorm = u / norm2(u)
 
+        m%rotationVector = m%rotationVector + u
+
         do atomIndex = 1, getNumberOfAtoms(m)
             newAtom = getAtom(m, atomIndex)
             call rotateAtom(newAtom, u, unorm, angleInRadians, getCoordinates(secondAtom))

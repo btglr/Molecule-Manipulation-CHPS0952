@@ -4,6 +4,8 @@ module molecule_obj
     type molecule
         type(atom), dimension(:), allocatable, private :: atoms
         integer, private :: numberOfAtoms
+        real, dimension(3), private :: translationVector
+        real, dimension(3), private :: rotationVector
     contains
         procedure :: displayMolecule
         procedure :: initMolecule
@@ -28,6 +30,8 @@ contains
         end if
 
         m%numberOfAtoms = 0
+        m%translationVector = 0.0
+        m%rotationVector = 0.0
     end subroutine initMolecule
 
     subroutine addAtom(m, at)
@@ -67,6 +71,8 @@ contains
         integer :: atomIndex
 
         print *, "Translation vector:", translationVector
+
+        m%translationVector = m%translationVector + translationVector
 
         call initMolecule(translatedMolecule, originalMolecule%numberOfAtoms)
 
