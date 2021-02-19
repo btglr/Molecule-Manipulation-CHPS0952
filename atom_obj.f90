@@ -35,7 +35,7 @@ contains
         class(atom), intent(inout) :: at
         real, dimension(:), intent(in) :: translationVector
 
-        at%coordinates = at%coordinates + translationVector
+        call setCoordinates(at, at%coordinates + translationVector)
     end subroutine translateAtom
 
     character function getAtomName(at) result(atomName)
