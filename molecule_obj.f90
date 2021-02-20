@@ -262,4 +262,35 @@ contains
         m%rotationAngle = rotationAngle
     end subroutine setRotationAngle
 
+    function filterByElement(m, element) result(atoms)
+        class(molecule), intent(in) :: m
+        character(*), intent(in) :: element
+
+        integer :: atomsOfElement, atomIndex, ok, atomOfElementIndex
+        type(atom), dimension(:), allocatable :: atoms
+
+        atomsOfElement = 0
+
+        do atomIndex = 1, m%numberOfAtoms
+            if (adjustl(getAtomName(getAtom(m, atomIndex))) == adjustl(element)) then
+                atomsOfElement = atomsOfElement + 1
+            end if
+        end do
+
+        allocate(atoms(atomsOfElement), stat = ok)
+
+        if(ok /= 0) then
+            print '(a)', "Error during the array allocation ==> aborting"
+            stop 666
+        end if
+
+        atomOfElementIndex = 1
+        do atomIndex = 1, m%numberOfAtoms
+            if (adjustl(getAtomName(getAtom(m, atomIndex))) == adjustl(element)) then
+                atoms(atomOfElementIndex) = getAtom(m, atomIndex)
+                atomOfElementIndex = atomOfElementIndex + 1
+            end if
+        end do
+    end function filterByElement
+
 end module molecule_obj
