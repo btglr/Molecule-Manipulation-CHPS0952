@@ -65,7 +65,7 @@ program ReadPDBObject
         call random_number(angleInDegrees)
 
         call translateMolecule(currentMolecule, translationVector)
-        call rotateMolecule(currentMolecule, angleInDegrees * 360.0)
+        call rotateMoleculeGlobally(currentMolecule, angleInDegrees * 360.0)
         call writeXYZ(currentMolecule, outputFile)
     end do
 

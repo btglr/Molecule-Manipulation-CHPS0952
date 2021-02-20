@@ -22,7 +22,7 @@ program MoleculeManipulation
     call readXYZ(firstMolecule, firstXYZ, 12)
     call readXYZ(secondMolecule, secondXYZ, 13)
 
-    call rotateMolecule(firstMolecule, 180.0)
+    call rotateMoleculeGlobally(firstMolecule, 180.0)
 
     call writeXYZ(firstMolecule, "test.xyz")
 end program MoleculeManipulation

@@ -111,7 +111,7 @@ contains
         print '(a35,x,f8.3,a)', "Distance between the two atoms: ", maxDistance, " Å"
     end subroutine furthestAtoms
 
-    subroutine rotateMolecule(m, angleInDegrees)
+    subroutine rotateMoleculeGlobally(m, angleInDegrees)
         class(molecule), intent(inout) :: m
         real, intent(in) :: angleInDegrees
 
@@ -147,7 +147,7 @@ contains
 
         print '(a35,x,3(f8.3))', "Axis vector: ", u
         print '(a35,x,3(f8.3))', "Normalized Axis vector: ", unorm
-    end subroutine rotateMolecule
+    end subroutine rotateMoleculeGlobally
 
     real function computeRMSD(m1, m2, type) result(rmsd)
         class(molecule), intent(in) :: m1
