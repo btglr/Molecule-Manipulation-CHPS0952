@@ -27,4 +27,12 @@ contains
         write (unit, 999, IOSTAT = iostat, IOMSG = iomsg) vr%element, vr%radius
         999 format(a2, x, f6.4, /)
     end subroutine printRadius
+
+    function getVdWRadiusElement(vr) result(element)
+        class(VdWRadius), intent(in) :: vr
+
+        character(len = 2) :: element
+
+        element = vr%element
+    end function getVdWRadiusElement
 end module vdw_obj
