@@ -1,4 +1,4 @@
-module xyz_handler
+module xyz_functions
     use atom_obj
     use molecule_obj
 
@@ -106,4 +106,4 @@ contains
         close(unit)
     end subroutine readXYZ
 
-end module xyz_handler
+end module xyz_functions

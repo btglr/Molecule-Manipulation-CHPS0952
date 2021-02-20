@@ -1,7 +1,7 @@
 program ReadPDBObject
     use atom_obj
     use molecule_obj
-    use xyz_handler
+    use xyz_functions
     use pdb_functions
     implicit none
 

@@ -1,7 +1,7 @@
 program RMSD
     use atom_obj
     use molecule_obj
-    use xyz_handler
+    use xyz_functions
 
     implicit none
 
