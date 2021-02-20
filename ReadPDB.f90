@@ -32,6 +32,7 @@ program ReadPDBObject
 
     call random_number(translationVector)
     call translateMolecule(currentMolecule, translationVector)
+    call rotateMolecule(currentMolecule, 180.0)
 
     call writeXYZ(currentMolecule, outputFile)
 
