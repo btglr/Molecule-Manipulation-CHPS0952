@@ -76,8 +76,6 @@ contains
             end if
         end do
 
-        print *, "Number of radii:", arraySize
-
         rewind(unit)
         call initVdWManager(manager, arraySize)
 
@@ -96,4 +94,19 @@ contains
 
         close(unit)
     end subroutine readVdW
+
+    function getVdWRadius(manager, element) result(radius)
+        class(VdWManager), intent(in) :: manager
+        character(*), intent(in) :: element
+
+        type(VdWRadius) :: radius
+        integer :: i
+
+        do i = 1, manager%numberOfRadii
+            if (adjustl(getVdWRadiusElement(manager%radii(i))) == element) then
+                radius = manager%radii(i)
+                exit
+            end if
+        end do
+    end function getVdWRadius
 end module vdw_manager
