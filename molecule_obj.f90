@@ -136,8 +136,6 @@ contains
 
         print '(a35,x,3(f8.3))', "Axis vector: ", u
         print '(a35,x,3(f8.3))', "Normalized Axis vector: ", unorm
-        print *, firstAtom
-        print *, secondAtom
     end subroutine rotateMolecule
 
     real function computeRMSD(m1, m2, type) result(rmsd)
