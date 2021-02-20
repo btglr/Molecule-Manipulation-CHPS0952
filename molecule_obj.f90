@@ -118,20 +118,31 @@ contains
         type(atom) :: firstAtom, secondAtom, newAtom
         real, dimension(3) :: u, unorm
         real :: angleInRadians, PI
-        integer :: atomIndex
+        integer :: atomIndex, i, j
+        integer, dimension(3, 3) :: identityMatrix
+        real, dimension(3, 3) :: wRodrigues, rotationMatrix
 
         PI = 4.D0 * DATAN(1.D0)
-        angleInRadians = angleInDegrees * PI / 180
+        theta = angleInDegrees * PI / 180
 
         call furthestAtoms(m, firstAtom, secondAtom)
 
         u = firstAtom - secondAtom
         unorm = u / norm2(u)
 
+        forall(i = 1:3, j = 1:3) identityMatrix(i, j) = (i / j) * (j / i)
+
+        ! https://mathworld.wolfram.com/RodriguesRotationFormula.html
+        wRodrigues = reshape([0.0, unorm(3), -unorm(2), -unorm(3), 0.0, unorm(1), unorm(2), -unorm(1), 0.0], &
+                shape(wRodrigues))
+
+        rotationMatrix = identityMatrix + sin(theta) * wRodrigues + (1.0 - cos(theta)) * &
+                matMul(wRodrigues, wRodrigues)
+
         m%rotationAngle = m%rotationAngle + angleInDegrees
 
         do atomIndex = 1, getNumberOfAtoms(m)
-            call rotateAtom(m%atoms(atomIndex), u, unorm, angleInRadians, getCoordinates(secondAtom))
+            call rotateAtom(m%atoms(atomIndex), rotationMatrix, getCoordinates(secondAtom))
         end do
 
         print '(a35,x,3(f8.3))', "Axis vector: ", u

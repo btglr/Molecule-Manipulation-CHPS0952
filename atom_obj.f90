@@ -65,25 +65,12 @@ contains
         coordinates = getCoordinates(at1) - getCoordinates(at2)
     end function atomMinusAtom
 
-    subroutine rotateAtom(at, u, unorm, theta, tail)
+    subroutine rotateAtom(at, rotationMatrix, tail)
         class(atom), intent(inout) :: at
-        real, dimension(3), intent(in) :: u, unorm
-        real, intent(in) :: theta
+        real, dimension(3,3), intent(in) :: rotationMatrix
         real, dimension(3), intent(in) :: tail
 
         real, dimension(3) :: newCoordinates, currentCoordinates, translatedPoint
-        integer, dimension(3, 3) :: identityMatrix
-        real, dimension(3, 3) :: wRodrigues, rotationMatrix
-        integer :: i, j
-
-        forall(i = 1:3, j = 1:3) identityMatrix(i, j) = (i / j) * (j / i)
-
-        ! https://mathworld.wolfram.com/RodriguesRotationFormula.html
-        wRodrigues = reshape([0.0, unorm(3), -unorm(2), -unorm(3), 0.0, unorm(1), unorm(2), -unorm(1), 0.0], &
-                shape(wRodrigues))
-
-        rotationMatrix = identityMatrix + sin(theta) * wRodrigues + (1.0 - cos(theta)) * &
-                matMul(wRodrigues, wRodrigues)
 
         currentCoordinates = getCoordinates(at)
         translatedPoint = currentCoordinates - tail
