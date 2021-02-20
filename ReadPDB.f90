@@ -31,6 +31,11 @@ program ReadPDBObject
             print '(a)', "Second argument was not of type integer"
             stop 10
         end if
+
+        if (numberOfFiles <= 0) then
+            print '(a)', "Second argument should be a strictly positive integer"
+            stop 10
+        end if
     else
         numberOfFiles = 1
     end if
