@@ -6,6 +6,6 @@ program VdWTest
 
     type(VdWManager) :: manager
 
-    call readVdW(manager, 'VdW_radii')
+    call readVdW(manager, 'VdW_radii.txt')
     print *, manager
 end program VdWTest
