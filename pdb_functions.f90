@@ -53,6 +53,8 @@ contains
                 end if
             end if
         end do
+
+        close(unit)
     end subroutine readPDB
 
 end module pdb_functions
