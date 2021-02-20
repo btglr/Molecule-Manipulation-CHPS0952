@@ -8,7 +8,7 @@ RMSD: atom_obj.o molecule_obj.o xyz_functions.o RMSD.o
 	-@echo "Linking    $(@)"
 	-@$(CC) -o $@.out $+
 
-ReadPDB: atom_obj.o molecule_obj.o pdb_functions.o xyz_functions.o ReadPDB.o
+ReadPDB: utilities.o atom_obj.o molecule_obj.o pdb_functions.o xyz_functions.o ReadPDB.o
 	-@echo "Linking    $(@)"
 	-@$(CC) -o $@.out $+
 
