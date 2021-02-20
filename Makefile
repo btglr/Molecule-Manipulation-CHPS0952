@@ -1,7 +1,7 @@
 CC=gfortran -fcheck=all
 #CC=ifort
 
-EXEC = ReadPDB RMSD MoleculeManipulation
+EXEC = ReadPDB RMSD MoleculeManipulation VdWTest
 all: $(EXEC)
 
 RMSD: atom_obj.o molecule_obj.o xyz_functions.o RMSD.o
@@ -13,6 +13,10 @@ ReadPDB: utilities.o atom_obj.o molecule_obj.o pdb_functions.o xyz_functions.o R
 	-@$(CC) -o $@.out $+
 
 MoleculeManipulation: atom_obj.o molecule_obj.o xyz_functions.o MoleculeManipulation.o
+	-@echo "Linking    $(@)"
+	-@$(CC) -o $@.out $+
+
+VdWTest: vdw_obj.o vdw_manager.o VdWTest.o
 	-@echo "Linking    $(@)"
 	-@$(CC) -o $@.out $+
 
