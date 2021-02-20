@@ -9,7 +9,7 @@ program ReadPDBObject
     integer :: i, end, ok, idx, arraySize, unit, numberOfFiles, currentOutputFile
     character(len = 128) :: inputFile, outputFile, basename, line, newFileName, outputDirectory
     character(len = 4) :: atomName, elementSymbol, numberOfFilesChar, currentFileChar
-    real :: x, y, z
+    real :: x, y, z, angleInDegrees
     type(atom) :: currentAtom
     type(atom), dimension(:), allocatable :: atoms
     type(molecule) :: currentMolecule, originalMolecule
@@ -55,9 +55,12 @@ program ReadPDBObject
         outputFile = adjustl(trim(outputDirectory)) // '/' // trim(basename) // "_" // trim(currentFileChar) // ".xyz"
 
         currentMolecule = originalMolecule
+
         call random_number(translationVector)
+        call random_number(angleInDegrees)
+
         call translateMolecule(currentMolecule, translationVector)
-        call rotateMolecule(currentMolecule, 180.0)
+        call rotateMolecule(currentMolecule, angleInDegrees * 360.0)
         call writeXYZ(currentMolecule, outputFile)
     end do
 
