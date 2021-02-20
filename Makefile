@@ -4,15 +4,15 @@ CC=gfortran -fcheck=all
 EXEC = ReadPDB RMSD MoleculeManipulation
 all: $(EXEC)
 
-RMSD: atom_obj.o molecule_obj.o xyz_objects.o RMSD.o
+RMSD: atom_obj.o molecule_obj.o xyz_functions.o RMSD.o
 	-@echo "Linking    $(@)"
 	-@$(CC) -o $@.out $+
 
-ReadPDB: atom_obj.o molecule_obj.o xyz_objects.o ReadPDB.o
+ReadPDB: atom_obj.o molecule_obj.o xyz_functions.o ReadPDB.o
 	-@echo "Linking    $(@)"
 	-@$(CC) -o $@.out $+
 
-MoleculeManipulation: atom_obj.o molecule_obj.o xyz_objects.o MoleculeManipulation.o
+MoleculeManipulation: atom_obj.o molecule_obj.o xyz_functions.o MoleculeManipulation.o
 	-@echo "Linking    $(@)"
 	-@$(CC) -o $@.out $+
 
