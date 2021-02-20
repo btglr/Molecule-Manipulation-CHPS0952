@@ -5,7 +5,13 @@ program VdWTest
     implicit none
 
     type(VdWManager) :: manager
+    type(VdWRadius) :: radius
 
     call readVdW(manager, 'VdW_radii.txt')
+
+    print '(a)', 'Printing all radii'
     print *, manager
+
+    print '(a, x, a2)', 'Getting one radius from element', 'Ba'
+    print *, getVdWRadius(manager, 'Ba')
 end program VdWTest
