@@ -1,0 +1,58 @@
+# Taken from https://en.wikipedia.org/wiki/Van_der_Waals_radius#Van_der_Waals_radius
+# date : 2020 01 21
+# converted from picometers to angrstrom
+# columns 1 and 2 : element name
+# columns 3 to 8 : radius
+H 1.1
+He1.4
+Li1.82
+Be1.53
+B 1.92
+C 1.7
+N 1.55
+O 1.52
+F 1.54
+Na2.27
+Mg1.73
+Al1.84
+Si2.1
+P 1.8
+S 1.8
+Cl1.75
+Ar1.88
+K 2.75
+Ca2.31
+Ni1.63
+Cu1.4
+Zn1.39
+Ga1.87
+Ge2.11
+As1.85
+Se1.9
+Br1.85
+Kr2.02
+Rb3.03
+Sr2.49
+Pd1.63
+Ag1.72
+Cd1.58
+In1.93
+Sn2.06
+Sb2.06
+Te2.06
+I 1.98
+Xe2.16
+Cs3.43
+Ba2.68
+Pt1.75
+Au1.66
+Hg1.55
+Tl1.96
+Pb2.02
+Bi2.07
+Po1.97
+At2.02
+Rn2.20
+Fr3.48
+Ra2.83
+U 1.86
