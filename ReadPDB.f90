@@ -37,6 +37,4 @@ program ReadPDBObject
     call writeXYZ(currentMolecule, outputFile)
 
     call removeMolecule(currentMolecule)
-
-    close(unit)
 end program ReadPDBObject
