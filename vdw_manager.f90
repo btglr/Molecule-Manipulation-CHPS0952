@@ -6,7 +6,9 @@ module vdw_manager
         integer :: numberOfRadii
     contains
         procedure :: printRadii
+        procedure :: initVdWManager
         procedure :: addVdWRadius
+        procedure :: readVdW
         generic :: write(formatted) => printRadii
     end type VdWManager
 contains
