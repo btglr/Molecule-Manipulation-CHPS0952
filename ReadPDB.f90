@@ -7,7 +7,7 @@ program ReadPDBObject
     implicit none
 
     integer :: i, end, ok, idx, arraySize, unit, numberOfFiles, currentOutputFile
-    character(len = 128) :: inputFile, outputFile, basename, line, newFileName
+    character(len = 128) :: inputFile, outputFile, basename, line, newFileName, outputDirectory
     character(len = 4) :: atomName, elementSymbol, numberOfFilesChar, currentFileChar
     real :: x, y, z
     type(atom) :: currentAtom
@@ -35,6 +35,9 @@ program ReadPDBObject
         numberOfFiles = 1
     end if
 
+    outputDirectory = 'XYZ'
+    call execute_command_line('mkdir -p ' // adjustl(trim(outputDirectory)))
+
     ! Write the number of files back in the string for later use instead of using numberOfFilesChar directly from
     ! getarg in case the provided number isn't correctly formatted (0050, ...)
     write (numberOfFilesChar, '(i4)') numberOfFiles
@@ -49,7 +52,7 @@ program ReadPDBObject
 
     do currentOutputFile = 1, numberOfFiles
         write (currentFileChar, '(i4.4)') currentOutputFile
-        outputFile = trim(basename) // "_" // trim(currentFileChar) // ".xyz"
+        outputFile = adjustl(trim(outputDirectory)) // '/' // trim(basename) // "_" // trim(currentFileChar) // ".xyz"
 
         currentMolecule = originalMolecule
         call random_number(translationVector)
