@@ -1,4 +1,5 @@
-CC=gfortran -fcheck=all
+CC=gfortran
+FLAGS=-fcheck=all -Wunused -pedantic -fimplicit-none
 #CC=ifort
 
 EXEC = ReadPDB RMSD MoleculeManipulation VdWTest
@@ -6,24 +7,24 @@ all: $(EXEC)
 
 RMSD: vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o xyz_functions.o RMSD.o
 	-@echo "Linking    $(@)"
-	-@$(CC) -o $@.out $+
+	-@$(CC) $(FLAGS) -o $@.out $+
 
 ReadPDB: utilities.o vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o pdb_functions.o xyz_functions.o ReadPDB.o
 	-@echo "Linking    $(@)"
-	-@$(CC) -o $@.out $+
+	-@$(CC) $(FLAGS) -o $@.out $+
 
 MoleculeManipulation: vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o xyz_functions.o MoleculeManipulation.o
 	-@echo "Linking    $(@)"
-	-@$(CC) -o $@.out $+
+	-@$(CC) $(FLAGS) -o $@.out $+
 
 VdWTest: vdw_obj.o vdw_manager.o VdWTest.o
 	-@echo "Linking    $(@)"
-	-@$(CC) -o $@.out $+
+	-@$(CC) $(FLAGS) -o $@.out $+
 
 %.o: %.f90
 	-@echo ""
 	-@echo "Generating $@"
-	-@$(CC) -c $<
+	-@$(CC) $(FLAGS) -c $<
 
 
 help:
@@ -47,7 +48,7 @@ clean_all: clean cleanSource
 	-@rm -rf $(EXEC)
 
 cleanSource:
-	-@find . \( -name "*~" -o -name "*.old" -o -name "#*" \) -print -exec rm \{\} \;
+	-@find . \( -name "*~" -o -name "*.old" -o -name "#*" -o -name "*.out" \) -print -exec rm \{\} \;
 
 
 .PHONY:  $(EXEC) clean clean_all cleanSource
