@@ -3,9 +3,14 @@ module atom_obj
         character(:), allocatable, private :: atomName
         real, dimension(3), private :: coordinates
     contains
-        procedure :: displayAtom
         procedure :: initAtom
+        procedure :: displayAtom
+        procedure :: translateAtom
+        procedure :: getAtomName
+        procedure :: getCoordinates
+        procedure :: setCoordinates
         procedure :: atomMinusAtom
+        procedure :: rotateAtom
         generic :: write(formatted) => displayAtom
         generic :: operator(-) => atomMinusAtom
     end type atom
@@ -37,14 +42,15 @@ contains
         call setCoordinates(at, at%coordinates + translationVector)
     end subroutine translateAtom
 
-    character function getAtomName(at) result(atomName)
-        type(atom), intent(in) :: at
+    pure elemental character function getAtomName(at) result(atomName)
+        class(atom), intent(in) :: at
 
         atomName = at%atomName
     end function getAtomName
 
-    function getCoordinates(at) result(coordinates)
+    pure function getCoordinates(at) result(coordinates)
         class(atom), intent(in) :: at
+
         real, dimension(3) :: coordinates
 
         coordinates = at%coordinates
@@ -57,8 +63,9 @@ contains
         at%coordinates = newCoordinates
     end subroutine setCoordinates
 
-    function atomMinusAtom(at1, at2) result(coordinates)
+    pure function atomMinusAtom(at1, at2) result(coordinates)
         class(atom), intent(in) :: at1, at2
+
         real, dimension(3) :: coordinates
 
         coordinates = getCoordinates(at1) - getCoordinates(at2)
@@ -69,7 +76,7 @@ contains
         real, dimension(3,3), intent(in) :: rotationMatrix
         real, dimension(3), intent(in) :: tail
 
-        real, dimension(3) :: newCoordinates, currentCoordinates, translatedPoint
+        real, dimension(3) :: currentCoordinates, newCoordinates, translatedPoint
 
         currentCoordinates = getCoordinates(at)
         translatedPoint = currentCoordinates - tail
