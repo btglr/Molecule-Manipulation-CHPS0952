@@ -6,23 +6,39 @@ module molecule_obj
     type molecule
         type(atom), dimension(:), allocatable, private :: atoms
         integer, private :: numberOfAtoms
-        real, dimension(3), private :: translationVector
-        real, private :: globalRotationAngle, internalRotationAngle
         logical, private :: validTopology
+        real, private :: globalRotationAngle, internalRotationAngle
+        real, dimension(3), private :: translationVector
     contains
-        procedure :: displayMolecule
         procedure :: initMolecule
+        procedure :: addAtom
+        procedure :: displayMolecule
         procedure :: removeMolecule
+        procedure :: translateMolecule
+        procedure :: furthestAtoms
+        procedure :: rotateMoleculeGlobally
+        procedure :: rotateMoleculeInternally
+        procedure :: computeRMSD
         procedure :: getNumberOfAtoms
         procedure :: getAtom
         procedure :: setAtom
-        procedure :: computeRMSD
+        procedure :: getTranslationVector
+        procedure :: setTranslationVector
+        procedure :: getGlobalRotationAngle
+        procedure :: setGlobalRotationAngle
+        procedure :: getInternalRotationAngle
+        procedure :: setInternalRotationAngle
+        procedure :: filterByElement
+        procedure :: getCarbonBonds
+        procedure :: checkTopology
+        procedure :: isValidTopology
         generic :: write(formatted) => displayMolecule
     end type molecule
 contains
     subroutine initMolecule(m, size)
         class(molecule), intent(inout) :: m
         integer, intent(in) :: size
+
         integer :: ok
 
         allocate(m%atoms(size), stat = ok)
@@ -33,10 +49,10 @@ contains
         end if
 
         m%numberOfAtoms = 0
-        m%translationVector = 0.0
+        m%validTopology = .TRUE.
         m%globalRotationAngle = 0.0
         m%internalRotationAngle = 0.0
-        m%validTopology = .TRUE.
+        m%translationVector = 0.0
     end subroutine initMolecule
 
     subroutine addAtom(m, at)
@@ -72,6 +88,7 @@ contains
     subroutine translateMolecule(m, translationVector)
         class(molecule), intent(inout) :: m
         real, dimension(:), intent(in) :: translationVector
+
         integer :: atomIndex
 
         print '(/, a40)', '=== Translating molecule ==='
@@ -87,9 +104,10 @@ contains
     subroutine furthestAtoms(m, firstAtom, secondAtom)
         class(molecule), intent(in) :: m
         type(atom), intent(inout) :: firstAtom, secondAtom
+
+        integer :: atomIndex, firstAtomIndex, numberOfAtoms, otherAtomIndex, secondAtomIndex
+        real :: distance, maxDistance
         real, dimension(3) :: currentCoords, otherCoords
-        integer :: numberOfAtoms, atomIndex, otherAtomIndex, firstAtomIndex, secondAtomIndex
-        real :: maxDistance, distance
 
         numberOfAtoms = getNumberOfAtoms(m)
         maxDistance = -1
@@ -122,11 +140,11 @@ contains
         real, intent(in) :: angleInDegrees
 
         type(atom) :: firstAtom, secondAtom
-        real, dimension(3) :: u, unorm
-        real :: theta, PI
         integer :: atomIndex, i, j
         integer, dimension(3, 3) :: identityMatrix
-        real, dimension(3, 3) :: wRodrigues, rotationMatrix
+        real :: PI, theta
+        real, dimension(3) :: u, unorm
+        real, dimension(3, 3) :: rotationMatrix, wRodrigues
 
         print '(/, a40)', '=== Rotating molecule globally ==='
         print '(/, a40, f7.3)', 'Angle of rotation: ', angleInDegrees
@@ -162,13 +180,13 @@ contains
         class(molecule), intent(inout) :: m
         real, intent(in) :: angleInDegrees
 
-        integer :: atomIndex, numberOfCarbonBonds, selectedBond, i, j
+        type(atom) :: firstAtom, secondAtom
+        integer :: atomIndex, i, j, numberOfCarbonBonds, selectedBond
         integer, dimension(3, 3) :: identityMatrix
         integer, dimension(:, :), allocatable :: carbonBonds
-        real :: theta, PI, random
+        real :: PI, random, theta
         real, dimension(3) :: u, unorm
-        real, dimension(3, 3) :: wRodrigues, rotationMatrix
-        type(atom) :: firstAtom, secondAtom
+        real, dimension(3, 3) :: rotationMatrix, wRodrigues
 
         if (angleInDegrees > 10.0) then
             print '(a)', 'Internal rotation should not be greater than 10 degrees'
@@ -220,9 +238,9 @@ contains
         class(molecule), intent(in) :: m2
         character(*), intent(in) :: type
 
-        real, dimension(:, :), allocatable :: difference
-        integer :: numberOfAtoms, numberOfHeavyAtoms, atomIndex
+        integer :: atomIndex, numberOfAtoms, numberOfHeavyAtoms
         logical :: sameMolecule
+        real, dimension(:, :), allocatable :: difference
 
         if (getNumberOfAtoms(m1) /= getNumberOfAtoms(m2)) then
             print '(a)', 'Error: the molecules do not have the same number of atoms ==> aborting'
@@ -345,8 +363,8 @@ contains
         class(molecule), intent(in) :: m
         character(*), intent(in) :: element
 
-        integer :: atomsOfElement, atomIndex, ok, atomOfElementIndex
         type(atom), dimension(:), allocatable :: atoms
+        integer :: atomIndex, atomsOfElement, atomOfElementIndex, ok
 
         atomsOfElement = 0
 
@@ -407,7 +425,7 @@ contains
         type(VdWManager), intent(in) :: manager
 
         integer :: atomIndex, otherAtomIndex
-        real :: sumRadii, distance
+        real :: distance, sumRadii
 
         print '(/, a40, /)', '=== Checking topology of molecule ==='
 
