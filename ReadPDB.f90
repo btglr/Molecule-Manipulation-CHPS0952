@@ -13,6 +13,7 @@ program ReadPDBObject
     type(atom) :: currentAtom
     type(atom), dimension(:), allocatable :: atoms
     type(molecule) :: currentMolecule, originalMolecule
+    type(VdWManager) :: manager
     real, dimension(3) :: translationVector
     integer :: stat
 
@@ -54,10 +55,10 @@ program ReadPDBObject
     print '(a, a)', "Number of output XYZ files to generate: ", adjustl(numberOfFilesChar)
 
     call readPDB(originalMolecule, inputFile)
+    call readVdW(manager, 'VdW_radii.txt')
 
     do currentOutputFile = 1, numberOfFiles
         write (currentFileChar, '(i4.4)') currentOutputFile
-        outputFile = adjustl(trim(outputDirectory)) // '/' // trim(basename) // "_" // trim(currentFileChar) // ".xyz"
 
         currentMolecule = originalMolecule
 
@@ -66,7 +67,16 @@ program ReadPDBObject
 
         call translateMolecule(currentMolecule, translationVector)
         call rotateMoleculeGlobally(currentMolecule, angleInDegrees * 360.0)
-        call rotateMoleculeInternally(currentMolecule, 5.0)
+        call rotateMoleculeInternally(currentMolecule, 2.0)
+        call checkTopology(currentMolecule, manager)
+
+        if (isValidTopology(currentMolecule)) then
+            outputFile = adjustl(trim(outputDirectory)) // '/' // trim(basename) // "_" // trim(currentFileChar) // ".xyz"
+        else
+            outputFile = adjustl(trim(outputDirectory)) // '/NON_VALIDE_' // trim(basename) // "_" // &
+                    trim(currentFileChar) // ".xyz"
+        end if
+
         call writeXYZ(currentMolecule, outputFile)
     end do
 
