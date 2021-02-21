@@ -35,4 +35,10 @@ contains
 
         element = vr%element
     end function getVdWElement
+
+    type(real) function getVdWRadius(vr) result(radius)
+        class(VdWRadius), intent(in) :: vr
+
+        radius = vr%radius
+    end function getVdWRadius
 end module vdw_obj
