@@ -47,7 +47,7 @@ contains
             else
                 if(line(1:6) == 'ATOM') then
                     read(line, '(6x, i5, 19x, 3(f8.3), 23x, a2)') idx, x, y, z, elementSymbol
-                    call initAtom(currentAtom, elementSymbol, (/x, y, z/))
+                    call initAtom(currentAtom, elementSymbol, ([x, y, z]))
                     call addAtom(m, currentAtom)
                 end if
             end if
