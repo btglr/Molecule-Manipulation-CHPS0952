@@ -153,34 +153,33 @@ contains
         class(molecule), intent(inout) :: m
         real, intent(in) :: angleInDegrees
 
-        type(atom) :: firstAtom, secondAtom
-        real, dimension(3) :: u, unorm
-        real :: theta, PI
-        integer :: atomIndex
+        integer :: atomIndex, carbonIndex, numberOfCarbonBonds, selectedBond
         integer, dimension(3, 3) :: identityMatrix
+        integer, dimension(:, :), allocatable :: carbonBonds
+        real :: theta, PI, random
+        real, dimension(3) :: u, unorm
         real, dimension(3, 3) :: wRodrigues, rotationMatrix
-
-!        type(atom), dimension(:), allocatable :: carbonAtoms
+        type(atom) :: firstAtom, secondAtom
 
         if (angleInDegrees > 10.0) then
             print '(a)', 'Internal rotation should not be greater than 10 degrees'
             stop 10
         end if
 
-        ! Filter all atoms of the current molecule and only get carbon atoms
-!        carbonAtoms = filterByElement(m, 'C')
-        ! Select a random chain from 1 to len - 1 so we don't select the last chain
-!        print *, carbonAtoms
-!        deallocate(carbonAtoms)
-
-        firstAtom = getAtom(m, 1344)
-        secondAtom = getAtom(m, 1345)
-
-        print *, firstAtom
-        print *, secondAtom
-
         PI = 4.D0 * DATAN(1.D0)
         theta = angleInDegrees * PI / 180
+
+        call getCarbonBonds(m, carbonBonds, numberOfCarbonBonds)
+        call random_number(random)
+
+        ! Select a random bond between the first and last - 1
+        selectedBond = 1 + floor((numberOfCarbonBonds - 1) * random)
+
+        print '(a35, x, i8)', 'Selected bond: ', selectedBond
+        print '(a35, x, 2(i8))', 'Atoms of selected bond: ', carbonBonds(selectedBond, :)
+
+        firstAtom = getAtom(m, carbonBonds(selectedBond, 1))
+        secondAtom = getAtom(m, carbonBonds(selectedBond, 2))
 
         u = firstAtom - secondAtom
         unorm = u / norm2(u)
@@ -194,12 +193,12 @@ contains
         rotationMatrix = identityMatrix + sin(theta) * wRodrigues + (1.0 - cos(theta)) * &
                 matMul(wRodrigues, wRodrigues)
 
-        do atomIndex = 1346, m%numberOfAtoms
+        do atomIndex = carbonBonds(selectedBond, 2), m%numberOfAtoms
             call rotateAtom(m%atoms(atomIndex), rotationMatrix, getCoordinates(secondAtom))
         end do
 
-        print '(a35,x,3(f8.3))', "Axis vector: ", u
-        print '(a35,x,3(f8.3))', "Normalized Axis vector: ", unorm
+        print '(a35,x,3(f8.3))', 'Axis vector: ', u
+        print '(a35,x,3(f8.3))', 'Normalized Axis vector: ', unorm
     end subroutine rotateMoleculeInternally
 
     real function computeRMSD(m1, m2, type) result(rmsd)
