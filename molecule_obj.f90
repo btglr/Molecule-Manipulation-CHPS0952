@@ -1,11 +1,14 @@
 module molecule_obj
     use atom_obj
+    use vdw_obj
+    use vdw_manager
 
     type molecule
         type(atom), dimension(:), allocatable, private :: atoms
         integer, private :: numberOfAtoms
         real, dimension(3), private :: translationVector
         real, private :: rotationAngle
+        logical, private :: validTopology
     contains
         procedure :: displayMolecule
         procedure :: initMolecule
@@ -32,6 +35,7 @@ contains
         m%numberOfAtoms = 0
         m%translationVector = 0.0
         m%rotationAngle = 0.0
+        m%validTopology = .TRUE.
     end subroutine initMolecule
 
     subroutine addAtom(m, at)
@@ -374,5 +378,40 @@ contains
             end if
         end do
     end subroutine getCarbonBonds
+
+    subroutine checkTopology(m, manager)
+        class(molecule), intent(inout) :: m
+        type(VdWManager), intent(in) :: manager
+
+        integer :: atomIndex, otherAtomIndex
+        real :: sumRadii, distance
+        type(VdWRadius) :: radius
+
+        do atomIndex = 1, m%numberOfAtoms
+            do otherAtomIndex = 1, m%numberOfAtoms
+                distance = norm2(getCoordinates(m%atoms(atomIndex)) - getCoordinates(m%atoms(otherAtomIndex)))
+                sumRadii = getVdWRadius(getVdWObject(manager, getAtomName(m%atoms(atomIndex)))) + &
+                        getVdWRadius(getVdWObject(manager, getAtomName(m%atoms(otherAtomIndex))))
+
+                if (distance > 0 .AND. distance / sumRadii < 0.35) then
+                    m%validTopology = .FALSE.
+
+                    print '(a35,x,i8)', 'First atom: ', atomIndex
+                    print *, m%atoms(atomIndex)
+                    print '(a35,x,i8)', 'Second atom: ', otherAtomIndex
+                    print *, m%atoms(otherAtomIndex)
+                    print '(a35,x,f8.3)', 'Distance: ', distance
+                    print '(a35,x,f8.3)', 'Sum of radii: ', sumRadii
+                    print '(a35,x,f8.3)', 'Ratio: ', distance / sumRadii
+                    print '(a35)', 'Invalid topology'
+                    exit
+                end if
+            end do
+
+            if (m%validTopology .eqv. .FALSE.) then
+                exit
+            end if
+        end do
+    end subroutine checkTopology
 
 end module molecule_obj
