@@ -66,6 +66,7 @@ program ReadPDBObject
 
         call translateMolecule(currentMolecule, translationVector)
         call rotateMoleculeGlobally(currentMolecule, angleInDegrees * 360.0)
+        call rotateMoleculeInternally(currentMolecule, 5.0)
         call writeXYZ(currentMolecule, outputFile)
     end do
 
