@@ -297,7 +297,7 @@ contains
         rmsd = sqrt(sum(difference ** 2) / numberOfAtoms)
     end function computeRMSD
 
-    integer function getNumberOfAtoms(m) result(numberOfAtoms)
+    pure elemental integer function getNumberOfAtoms(m) result(numberOfAtoms)
         class(molecule), intent(in) :: m
 
         numberOfAtoms = m%numberOfAtoms
@@ -318,7 +318,7 @@ contains
         m%atoms(atomIndex) = at
     end subroutine setAtom
 
-    function getTranslationVector(m) result(translationVector)
+    pure function getTranslationVector(m) result(translationVector)
         class(molecule), intent(in) :: m
 
         real, dimension(3) :: translationVector
@@ -333,7 +333,7 @@ contains
         m%translationVector = translationVector
     end subroutine setTranslationVector
 
-    type(real) function getGlobalRotationAngle(m) result(globalRotationAngle)
+    pure elemental real function getGlobalRotationAngle(m) result(globalRotationAngle)
         class(molecule), intent(in) :: m
 
         globalRotationAngle = m%globalRotationAngle
@@ -346,7 +346,7 @@ contains
         m%globalRotationAngle = globalRotationAngle
     end subroutine setGlobalRotationAngle
 
-    type(real) function getInternalRotationAngle(m) result(internalRotationAngle)
+    pure elemental real function getInternalRotationAngle(m) result(internalRotationAngle)
         class(molecule), intent(in) :: m
 
         internalRotationAngle = m%internalRotationAngle
@@ -456,7 +456,7 @@ contains
         end do
     end subroutine checkTopology
 
-    type(logical) function isValidTopology(m) result(validTopology)
+    pure elemental logical function isValidTopology(m) result(validTopology)
         class(molecule), intent(in) :: m
 
         validTopology = m%validTopology
