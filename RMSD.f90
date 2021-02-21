@@ -25,9 +25,9 @@ program RMSD
 
     rmsdValue = computeRMSD(firstMolecule, secondMolecule, type = 'standard')
 
-    print '(a25,f8.3)', 'RMSD Standard:', rmsdValue
+    print '(a40, f12.3)', 'RMSD Standard:', rmsdValue
 
     rmsdValue = computeRMSD(firstMolecule, secondMolecule, type = 'heavy')
 
-    print '(a25,f8.3)', 'RMSD Heavy:', rmsdValue
+    print '(a40, f12.3)', 'RMSD Heavy:', rmsdValue
 end program RMSD

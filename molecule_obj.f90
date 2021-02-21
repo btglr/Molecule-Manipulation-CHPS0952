@@ -74,7 +74,8 @@ contains
         real, dimension(:), intent(in) :: translationVector
         integer :: atomIndex
 
-        print *, 'Translation vector:', translationVector
+        print '(/, a40)', '=== Translating molecule ==='
+        print '(/, a40, 3(f8.3))', 'Translation vector: ', translationVector
 
         m%translationVector = m%translationVector + translationVector
 
@@ -112,8 +113,8 @@ contains
             end do
         end do
 
-        print '(a35, 1x, i8, 1x, i8)', 'Two furthest atoms: ', firstAtomIndex, secondAtomIndex
-        print '(a35, 1x, f8.3, a)', 'Distance between the two atoms: ', maxDistance, ' Å'
+        print '(a40, i8, 1x, i8)', 'Two furthest atoms: ', firstAtomIndex, secondAtomIndex
+        print '(a40, f8.3, a)', 'Distance between the two atoms: ', maxDistance, ' Å'
     end subroutine furthestAtoms
 
     subroutine rotateMoleculeGlobally(m, angleInDegrees)
@@ -126,6 +127,9 @@ contains
         integer :: atomIndex, i, j
         integer, dimension(3, 3) :: identityMatrix
         real, dimension(3, 3) :: wRodrigues, rotationMatrix
+
+        print '(/, a40)', '=== Rotating molecule globally ==='
+        print '(/, a40, f7.3)', 'Angle of rotation: ', angleInDegrees
 
         PI = 4.D0 * datan(1.D0)
         theta = angleInDegrees * PI / 180
@@ -150,8 +154,8 @@ contains
             call rotateAtom(m%atoms(atomIndex), rotationMatrix, getCoordinates(secondAtom))
         end do
 
-        print '(a35, 1x, 3(f8.3))', 'Axis vector: ', u
-        print '(a35, 1x, 3(f8.3))', 'Normalized Axis vector: ', unorm
+        print '(a40, 1x, 3(f8.3))', 'Axis vector: ', u
+        print '(a40, 1x, 3(f8.3))', 'Normalized Axis vector: ', unorm
     end subroutine rotateMoleculeGlobally
 
     subroutine rotateMoleculeInternally(m, angleInDegrees)
@@ -171,6 +175,9 @@ contains
             stop 10
         end if
 
+        print '(/, a40)', '=== Rotating molecule internally ==='
+        print '(/, a40, f7.3)', 'Angle of rotation: ', angleInDegrees
+
         PI = 4.D0 * datan(1.D0)
         theta = angleInDegrees * PI / 180
 
@@ -180,8 +187,8 @@ contains
         ! Select a random bond between the first and last - 1
         selectedBond = 1 + floor((numberOfCarbonBonds - 1) * random)
 
-        print '(a35, 1x, i8)', 'Selected bond: ', selectedBond
-        print '(a35, 1x, 2(i8))', 'Atoms of selected bond: ', carbonBonds(selectedBond, :)
+        print '(a40, 1x, i8)', 'Selected bond: ', selectedBond
+        print '(a40, 1x, 2(i8))', 'Atoms of selected bond: ', carbonBonds(selectedBond, :)
 
         firstAtom = getAtom(m, carbonBonds(selectedBond, 1))
         secondAtom = getAtom(m, carbonBonds(selectedBond, 2))
@@ -204,8 +211,8 @@ contains
             call rotateAtom(m%atoms(atomIndex), rotationMatrix, getCoordinates(secondAtom))
         end do
 
-        print '(a35, 1x, 3(f8.3))', 'Axis vector: ', u
-        print '(a35, 1x, 3(f8.3))', 'Normalized Axis vector: ', unorm
+        print '(a40, 1x, 3(f8.3))', 'Axis vector: ', u
+        print '(a40, 1x, 3(f8.3))', 'Normalized Axis vector: ', unorm
     end subroutine rotateMoleculeInternally
 
     real function computeRMSD(m1, m2, type) result(rmsd)
@@ -240,7 +247,7 @@ contains
         end if
 
         if (type == 'standard') then
-            print '(a25,i8)', 'Number of atoms:', numberOfAtoms
+            print '(a40, i12)', 'Number of atoms:', numberOfAtoms
             allocate(difference(numberOfAtoms, 3))
 
             do atomIndex = 1, numberOfAtoms
@@ -262,12 +269,12 @@ contains
             end do
 
             numberOfAtoms = numberOfHeavyAtoms
-            print '(a25,i8)', 'Number of heavy atoms:', numberOfAtoms
+            print '(a40, i12)', 'Number of heavy atoms:', numberOfAtoms
         else
             stop 20
         end if
 
-        print '(a25,f8.0)', 'Sum:', sum(difference ** 2)
+        print '(a40, f12.0)', 'Sum:', sum(difference ** 2)
 
         rmsd = sqrt(sum(difference ** 2) / numberOfAtoms)
     end function computeRMSD
@@ -380,7 +387,7 @@ contains
             end if
         end do
 
-        print '(a35, 1x, i8)', 'Number of carbon bonds: ', numberOfCarbonBonds
+        print '(a40, 1x, i8)', 'Number of carbon bonds: ', numberOfCarbonBonds
 
         allocate(carbonBonds(numberOfCarbonBonds, 2))
 
@@ -402,6 +409,8 @@ contains
         integer :: atomIndex, otherAtomIndex
         real :: sumRadii, distance
 
+        print '(/, a40, /)', '=== Checking topology of molecule ==='
+
         do atomIndex = 1, m%numberOfAtoms
             do otherAtomIndex = 1, m%numberOfAtoms
                 distance = norm2(getCoordinates(m%atoms(atomIndex)) - getCoordinates(m%atoms(otherAtomIndex)))
@@ -411,14 +420,14 @@ contains
                 if (distance > 0 .AND. distance / sumRadii < 0.35) then
                     m%validTopology = .FALSE.
 
-                    print '(a35, 1x, i8)', 'First atom: ', atomIndex
+                    print '(a50)', '/!\ INVALID TOPOLOGY /!\'
+                    print '(a40, 1x, i8)', 'First atom: ', atomIndex
                     print *, m%atoms(atomIndex)
-                    print '(a35, 1x, i8)', 'Second atom: ', otherAtomIndex
+                    print '(a40, 1x, i8)', 'Second atom: ', otherAtomIndex
                     print *, m%atoms(otherAtomIndex)
-                    print '(a35, 1x, f8.3)', 'Distance: ', distance
-                    print '(a35, 1x, f8.3)', 'Sum of radii: ', sumRadii
-                    print '(a35, 1x, f8.3)', 'Ratio: ', distance / sumRadii
-                    print '(a35)', 'Invalid topology'
+                    print '(a40, 1x, f8.3)', 'Distance: ', distance
+                    print '(a40, 1x, f8.3)', 'Sum of radii: ', sumRadii
+                    print '(a40, 1x, f8.3, a)', 'Ratio: ', distance / sumRadii, ' < 0.35'
                     exit
                 end if
             end do

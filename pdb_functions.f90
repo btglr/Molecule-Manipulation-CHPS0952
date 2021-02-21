@@ -35,7 +35,7 @@ contains
             end if
         end do
 
-        print *, 'Number of atoms:', arraySize
+        print '(a40, i8)', 'Number of atoms: ', arraySize
 
         rewind(unit)
         call initMolecule(m, arraySize)

@@ -49,13 +49,17 @@ program ReadPDBObject
     inputFile = trim(inputFile)
     basename = trim(getNameFromPath(inputFile))
 
-    print '(a, a)', 'File to read: ', inputFile
-    print '(a, a)', 'Number of output XYZ files to generate: ', adjustl(numberOfFilesChar)
+    print '(a40, a)', 'Number of output XYZ files to generate: ', adjustl(numberOfFilesChar)
+
+    print '(/, a, 1x, a)', 'Reading PDB file', adjustl(trim(inputFile))
 
     call readPDB(originalMolecule, inputFile)
+
+    print '(/, a)', 'Reading Van der Waals radii'
     call readVdW(manager, 'VdW_radii.txt')
 
     do currentOutputFile = 1, numberOfFiles
+        print '(/, a, i4.4, a, i4.4)', 'Creating output file ', currentOutputFile, ' of ', numberOfFiles
         write (currentFileChar, '(i4.4)') currentOutputFile
 
         currentMolecule = originalMolecule
