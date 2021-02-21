@@ -346,4 +346,34 @@ contains
         end do
     end function filterByElement
 
+    subroutine getCarbonBonds(m, carbonBonds, numberOfCarbonBonds)
+        class(molecule), intent(in) :: m
+        integer, dimension(:, :), allocatable, intent(inout) :: carbonBonds
+        integer, intent(inout) :: numberOfCarbonBonds
+
+        integer :: atomIndex, carbonIndex
+
+        numberOfCarbonBonds = 0
+
+        do atomIndex = 1, m%numberOfAtoms - 1
+            if (getAtomName(m%atoms(atomIndex)) == getAtomName(m%atoms(atomIndex + 1))) then
+                numberOfCarbonBonds = numberOfCarbonBonds + 1
+            end if
+        end do
+
+        print '(a35, x, i8)', 'Number of carbon bonds: ', numberOfCarbonBonds
+
+        allocate(carbonBonds(numberOfCarbonBonds, 2))
+
+        carbonIndex = 1
+        do atomIndex = 1, m%numberOfAtoms - 1
+            if (getAtomName(m%atoms(atomIndex)) == getAtomName(m%atoms(atomIndex + 1))) then
+                carbonBonds(carbonIndex, 1) = atomIndex
+                carbonBonds(carbonIndex, 2) = atomIndex + 1
+
+                carbonIndex = carbonIndex + 1
+            end if
+        end do
+    end subroutine getCarbonBonds
+
 end module molecule_obj
