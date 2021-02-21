@@ -425,8 +425,8 @@ contains
                     print *, m%atoms(atomIndex)
                     print '(a40, 1x, i8)', 'Second atom: ', otherAtomIndex
                     print *, m%atoms(otherAtomIndex)
-                    print '(a40, 1x, f8.3)', 'Distance: ', distance
-                    print '(a40, 1x, f8.3)', 'Sum of radii: ', sumRadii
+                    print '(a40, 1x, f8.3, a)', 'Distance: ', distance, ' Å'
+                    print '(a40, 1x, f8.3, a)', 'Sum of radii: ', sumRadii, ' Å'
                     print '(a40, 1x, f8.3, a)', 'Ratio: ', distance / sumRadii, ' < 0.35'
                     exit
                 end if
