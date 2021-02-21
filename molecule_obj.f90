@@ -7,7 +7,7 @@ module molecule_obj
         type(atom), dimension(:), allocatable, private :: atoms
         integer, private :: numberOfAtoms
         real, dimension(3), private :: translationVector
-        real, private :: rotationAngle
+        real, private :: globalRotationAngle
         logical, private :: validTopology
     contains
         procedure :: displayMolecule
@@ -34,7 +34,7 @@ contains
 
         m%numberOfAtoms = 0
         m%translationVector = 0.0
-        m%rotationAngle = 0.0
+        m%globalRotationAngle = 0.0
         m%validTopology = .TRUE.
     end subroutine initMolecule
 
@@ -143,7 +143,7 @@ contains
         rotationMatrix = identityMatrix + sin(theta) * wRodrigues + (1.0 - cos(theta)) * &
                 matMul(wRodrigues, wRodrigues)
 
-        m%rotationAngle = m%rotationAngle + angleInDegrees
+        m%globalRotationAngle = m%globalRotationAngle + angleInDegrees
 
         do atomIndex = 1, getNumberOfAtoms(m)
             call rotateAtom(m%atoms(atomIndex), rotationMatrix, getCoordinates(secondAtom))
@@ -305,18 +305,18 @@ contains
         m%translationVector = translationVector
     end subroutine setTranslationVector
 
-    type(real) function getRotationAngle(m) result(rotationVector)
+    type(real) function getGlobalRotationAngle(m) result(rotationVector)
         class(molecule), intent(in) :: m
 
-        rotationAngle = m%rotationAngle
-    end function getRotationAngle
+        globalRotationAngle = m%globalRotationAngle
+    end function getGlobalRotationAngle
 
-    subroutine setRotationAngle(m, rotationAngle)
+    subroutine setGlobalRotationAngle(m, globalRotationAngle)
         class(molecule), intent(inout) :: m
-        real, intent(in) :: rotationAngle
+        real, intent(in) :: globalRotationAngle
 
-        m%rotationAngle = rotationAngle
-    end subroutine setRotationAngle
+        m%globalRotationAngle = globalRotationAngle
+    end subroutine setGlobalRotationAngle
 
     function filterByElement(m, element) result(atoms)
         class(molecule), intent(in) :: m
