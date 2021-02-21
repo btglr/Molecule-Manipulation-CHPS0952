@@ -54,6 +54,7 @@ contains
         character(len = 2) :: element
         character(len = 10) :: line
         integer :: end, ok, arraySize, unit
+        real :: radius
 
         unit = 20
         open(unit, file = vdwFile, iostat = ok, status = 'old')

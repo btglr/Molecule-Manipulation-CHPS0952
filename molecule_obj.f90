@@ -127,7 +127,7 @@ contains
         integer, dimension(3, 3) :: identityMatrix
         real, dimension(3, 3) :: wRodrigues, rotationMatrix
 
-        PI = 4.D0 * DATAN(1.D0)
+        PI = 4.D0 * datan(1.D0)
         theta = angleInDegrees * PI / 180
 
         call furthestAtoms(m, firstAtom, secondAtom)
@@ -158,7 +158,7 @@ contains
         class(molecule), intent(inout) :: m
         real, intent(in) :: angleInDegrees
 
-        integer :: atomIndex, numberOfCarbonBonds, selectedBond
+        integer :: atomIndex, numberOfCarbonBonds, selectedBond, i, j
         integer, dimension(3, 3) :: identityMatrix
         integer, dimension(:, :), allocatable :: carbonBonds
         real :: theta, PI, random
@@ -171,7 +171,7 @@ contains
             stop 10
         end if
 
-        PI = 4.D0 * DATAN(1.D0)
+        PI = 4.D0 * datan(1.D0)
         theta = angleInDegrees * PI / 180
 
         call getCarbonBonds(m, carbonBonds, numberOfCarbonBonds)
