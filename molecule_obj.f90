@@ -414,4 +414,10 @@ contains
         end do
     end subroutine checkTopology
 
+    type(logical) function isValidTopology(m) result(validTopology)
+        class(molecule), intent(in) :: m
+
+        validTopology = m%validTopology
+    end function isValidTopology
+
 end module molecule_obj
