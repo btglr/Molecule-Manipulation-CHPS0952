@@ -149,6 +149,59 @@ contains
         print '(a35,x,3(f8.3))', "Normalized Axis vector: ", unorm
     end subroutine rotateMoleculeGlobally
 
+    subroutine rotateMoleculeInternally(m, angleInDegrees)
+        class(molecule), intent(inout) :: m
+        real, intent(in) :: angleInDegrees
+
+        type(atom) :: firstAtom, secondAtom
+        real, dimension(3) :: u, unorm
+        real :: theta, PI
+        integer :: atomIndex
+        integer, dimension(3, 3) :: identityMatrix
+        real, dimension(3, 3) :: wRodrigues, rotationMatrix
+
+!        type(atom), dimension(:), allocatable :: carbonAtoms
+
+        if (angleInDegrees > 10.0) then
+            print '(a)', 'Internal rotation should not be greater than 10 degrees'
+            stop 10
+        end if
+
+        ! Filter all atoms of the current molecule and only get carbon atoms
+!        carbonAtoms = filterByElement(m, 'C')
+        ! Select a random chain from 1 to len - 1 so we don't select the last chain
+!        print *, carbonAtoms
+!        deallocate(carbonAtoms)
+
+        firstAtom = getAtom(m, 1344)
+        secondAtom = getAtom(m, 1345)
+
+        print *, firstAtom
+        print *, secondAtom
+
+        PI = 4.D0 * DATAN(1.D0)
+        theta = angleInDegrees * PI / 180
+
+        u = firstAtom - secondAtom
+        unorm = u / norm2(u)
+
+        forall(i = 1:3, j = 1:3) identityMatrix(i, j) = (i / j) * (j / i)
+
+        ! https://mathworld.wolfram.com/RodriguesRotationFormula.html
+        wRodrigues = reshape([0.0, unorm(3), -unorm(2), -unorm(3), 0.0, unorm(1), unorm(2), -unorm(1), 0.0], &
+                shape(wRodrigues))
+
+        rotationMatrix = identityMatrix + sin(theta) * wRodrigues + (1.0 - cos(theta)) * &
+                matMul(wRodrigues, wRodrigues)
+
+        do atomIndex = 1346, m%numberOfAtoms
+            call rotateAtom(m%atoms(atomIndex), rotationMatrix, getCoordinates(secondAtom))
+        end do
+
+        print '(a35,x,3(f8.3))', "Axis vector: ", u
+        print '(a35,x,3(f8.3))', "Normalized Axis vector: ", unorm
+    end subroutine rotateMoleculeInternally
+
     real function computeRMSD(m1, m2, type) result(rmsd)
         class(molecule), intent(in) :: m1
         class(molecule), intent(in) :: m2
