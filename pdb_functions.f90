@@ -9,11 +9,10 @@ contains
         character(len = 128), intent(in) :: pdbFile
 
         type(atom) :: currentAtom
-        type(atom), dimension(:), allocatable :: atoms
         character(len = 4) :: atomName, elementSymbol
         character(len = 128) :: line
         real :: x, y, z
-        integer :: i, end, ok, idx, arraySize, unit
+        integer :: end, ok, idx, arraySize, unit
 
         unit = 10
         open(unit, file = pdbFile, iostat = ok, status = 'old')

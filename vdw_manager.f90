@@ -53,7 +53,7 @@ contains
         type(VdWRadius) :: currentRadius
         character(len = 2) :: element
         character(len = 10) :: line
-        integer :: i, end, ok, arraySize, unit
+        integer :: end, ok, arraySize, unit
 
         unit = 20
         open(unit, file = vdwFile, iostat = ok, status = 'old')

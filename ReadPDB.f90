@@ -6,12 +6,10 @@ program ReadPDBObject
     use utilities
     implicit none
 
-    integer :: i, end, ok, idx, arraySize, unit, numberOfFiles, currentOutputFile
-    character(len = 128) :: inputFile, outputFile, basename, line, newFileName, outputDirectory
-    character(len = 4) :: atomName, elementSymbol, numberOfFilesChar, currentFileChar
-    real :: x, y, z, globalRotationAngleInDegrees, internalRotationAngleInDegrees
-    type(atom) :: currentAtom
-    type(atom), dimension(:), allocatable :: atoms
+    integer :: numberOfFiles, currentOutputFile
+    character(len = 128) :: inputFile, outputFile, basename, outputDirectory
+    character(len = 4) :: numberOfFilesChar, currentFileChar
+    real :: globalRotationAngleInDegrees, internalRotationAngleInDegrees
     type(molecule) :: currentMolecule, originalMolecule
     type(VdWManager) :: manager
     real, dimension(3) :: translationVector

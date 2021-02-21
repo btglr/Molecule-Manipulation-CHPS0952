@@ -35,7 +35,7 @@ contains
         globalRotationAngle = getGlobalRotationAngle(m)
         internalRotationAngle = getInternalRotationAngle(m)
 
-        write(comment, '(a20,3(f8.3),x,a30,f8.3,x,a30,f5.3)') &
+        write(comment, '(a20, 3(f8.3), 1x, a30, f8.3, 1x, a30, f5.3)') &
                 "Translation: ", translationVector, &
                 "Global rotation angle: ", globalRotationAngle, &
                 "Internal rotation angle: ", internalRotationAngle

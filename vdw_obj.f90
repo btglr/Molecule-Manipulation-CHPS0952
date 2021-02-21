@@ -25,7 +25,7 @@ contains
         integer, intent(out) :: iostat          ! non zero on error, etc.
         character(*), intent(inout) :: iomsg    ! define if iostat non zero.
         write (unit, 999, IOSTAT = iostat, IOMSG = iomsg) vr%element, vr%radius
-        999 format(a2, x, f6.4, /)
+        999 format(a2, 1x, f6.4, /)
     end subroutine printRadius
 
     function getVdWElement(vr) result(element)

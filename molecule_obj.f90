@@ -112,17 +112,17 @@ contains
             end do
         end do
 
-        print '(a35,x,i8,x,i8)', "Two furthest atoms: ", firstAtomIndex, secondAtomIndex
-        print '(a35,x,f8.3,a)', "Distance between the two atoms: ", maxDistance, " Å"
+        print '(a35, 1x, i8, 1x, i8)', "Two furthest atoms: ", firstAtomIndex, secondAtomIndex
+        print '(a35, 1x, f8.3, a)', "Distance between the two atoms: ", maxDistance, " Å"
     end subroutine furthestAtoms
 
     subroutine rotateMoleculeGlobally(m, angleInDegrees)
         class(molecule), intent(inout) :: m
         real, intent(in) :: angleInDegrees
 
-        type(atom) :: firstAtom, secondAtom, newAtom
+        type(atom) :: firstAtom, secondAtom
         real, dimension(3) :: u, unorm
-        real :: angleInRadians, PI
+        real :: theta, PI
         integer :: atomIndex, i, j
         integer, dimension(3, 3) :: identityMatrix
         real, dimension(3, 3) :: wRodrigues, rotationMatrix
@@ -150,15 +150,15 @@ contains
             call rotateAtom(m%atoms(atomIndex), rotationMatrix, getCoordinates(secondAtom))
         end do
 
-        print '(a35,x,3(f8.3))', "Axis vector: ", u
-        print '(a35,x,3(f8.3))', "Normalized Axis vector: ", unorm
+        print '(a35, 1x, 3(f8.3))', "Axis vector: ", u
+        print '(a35, 1x, 3(f8.3))', "Normalized Axis vector: ", unorm
     end subroutine rotateMoleculeGlobally
 
     subroutine rotateMoleculeInternally(m, angleInDegrees)
         class(molecule), intent(inout) :: m
         real, intent(in) :: angleInDegrees
 
-        integer :: atomIndex, carbonIndex, numberOfCarbonBonds, selectedBond
+        integer :: atomIndex, numberOfCarbonBonds, selectedBond
         integer, dimension(3, 3) :: identityMatrix
         integer, dimension(:, :), allocatable :: carbonBonds
         real :: theta, PI, random
@@ -180,8 +180,8 @@ contains
         ! Select a random bond between the first and last - 1
         selectedBond = 1 + floor((numberOfCarbonBonds - 1) * random)
 
-        print '(a35, x, i8)', 'Selected bond: ', selectedBond
-        print '(a35, x, 2(i8))', 'Atoms of selected bond: ', carbonBonds(selectedBond, :)
+        print '(a35, 1x, i8)', 'Selected bond: ', selectedBond
+        print '(a35, 1x, 2(i8))', 'Atoms of selected bond: ', carbonBonds(selectedBond, :)
 
         firstAtom = getAtom(m, carbonBonds(selectedBond, 1))
         secondAtom = getAtom(m, carbonBonds(selectedBond, 2))
@@ -204,8 +204,8 @@ contains
             call rotateAtom(m%atoms(atomIndex), rotationMatrix, getCoordinates(secondAtom))
         end do
 
-        print '(a35,x,3(f8.3))', 'Axis vector: ', u
-        print '(a35,x,3(f8.3))', 'Normalized Axis vector: ', unorm
+        print '(a35, 1x, 3(f8.3))', 'Axis vector: ', u
+        print '(a35, 1x, 3(f8.3))', 'Normalized Axis vector: ', unorm
     end subroutine rotateMoleculeInternally
 
     real function computeRMSD(m1, m2, type) result(rmsd)
@@ -308,7 +308,7 @@ contains
         m%translationVector = translationVector
     end subroutine setTranslationVector
 
-    type(real) function getGlobalRotationAngle(m) result(rotationVector)
+    type(real) function getGlobalRotationAngle(m) result(globalRotationAngle)
         class(molecule), intent(in) :: m
 
         globalRotationAngle = m%globalRotationAngle
@@ -321,7 +321,7 @@ contains
         m%globalRotationAngle = globalRotationAngle
     end subroutine setGlobalRotationAngle
 
-    type(real) function getInternalRotationAngle(m) result(rotationAngle)
+    type(real) function getInternalRotationAngle(m) result(internalRotationAngle)
         class(molecule), intent(in) :: m
 
         internalRotationAngle = m%internalRotationAngle
@@ -380,7 +380,7 @@ contains
             end if
         end do
 
-        print '(a35, x, i8)', 'Number of carbon bonds: ', numberOfCarbonBonds
+        print '(a35, 1x, i8)', 'Number of carbon bonds: ', numberOfCarbonBonds
 
         allocate(carbonBonds(numberOfCarbonBonds, 2))
 
@@ -401,7 +401,6 @@ contains
 
         integer :: atomIndex, otherAtomIndex
         real :: sumRadii, distance
-        type(VdWRadius) :: radius
 
         do atomIndex = 1, m%numberOfAtoms
             do otherAtomIndex = 1, m%numberOfAtoms
@@ -412,13 +411,13 @@ contains
                 if (distance > 0 .AND. distance / sumRadii < 0.35) then
                     m%validTopology = .FALSE.
 
-                    print '(a35,x,i8)', 'First atom: ', atomIndex
+                    print '(a35, 1x, i8)', 'First atom: ', atomIndex
                     print *, m%atoms(atomIndex)
-                    print '(a35,x,i8)', 'Second atom: ', otherAtomIndex
+                    print '(a35, 1x, i8)', 'Second atom: ', otherAtomIndex
                     print *, m%atoms(otherAtomIndex)
-                    print '(a35,x,f8.3)', 'Distance: ', distance
-                    print '(a35,x,f8.3)', 'Sum of radii: ', sumRadii
-                    print '(a35,x,f8.3)', 'Ratio: ', distance / sumRadii
+                    print '(a35, 1x, f8.3)', 'Distance: ', distance
+                    print '(a35, 1x, f8.3)', 'Sum of radii: ', sumRadii
+                    print '(a35, 1x, f8.3)', 'Ratio: ', distance / sumRadii
                     print '(a35)', 'Invalid topology'
                     exit
                 end if
