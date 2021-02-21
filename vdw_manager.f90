@@ -77,6 +77,8 @@ contains
             end if
         end do
 
+        print '(a40, i8)', 'Number of VdW radii: ', arraySize
+
         rewind(unit)
         call initVdWManager(manager, arraySize)
 
