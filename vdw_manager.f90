@@ -31,7 +31,7 @@ contains
         allocate(manager%radii(size), stat = ok)
 
         if(ok /= 0) then
-            print '(a)', "Error during the array allocation ==> aborting"
+            print '(a)', 'Error during the array allocation ==> aborting'
             stop 666
         end if
 
@@ -60,7 +60,7 @@ contains
         open(unit, file = vdwFile, iostat = ok, status = 'old')
 
         if(ok /= 0) then
-            print '(a, 4x, a)', "Error during opening", vdwFile
+            print '(a, 4x, a)', 'Error during opening', vdwFile
             stop 20
         end if
 

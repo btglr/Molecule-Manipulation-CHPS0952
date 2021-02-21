@@ -9,7 +9,7 @@ program MoleculeManipulation
     type(molecule) :: firstMolecule, secondMolecule
 
     if(iargc() /= 2) then
-        print '(a)', "Please provide two XYZ files to read"
+        print '(a)', 'Please provide two XYZ files to read'
         stop 10
     end if
 
@@ -24,5 +24,5 @@ program MoleculeManipulation
 
     call rotateMoleculeGlobally(firstMolecule, 180.0)
 
-    call writeXYZ(firstMolecule, "test.xyz")
+    call writeXYZ(firstMolecule, 'test.xyz')
 end program MoleculeManipulation

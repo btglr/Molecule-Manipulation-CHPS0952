@@ -18,7 +18,7 @@ contains
         open(unit, file = pdbFile, iostat = ok, status = 'old')
 
         if(ok /= 0) then
-            print '(a, 4x, a)', "Error during opening", pdbFile
+            print '(a, 4x, a)', 'Error during opening', pdbFile
             stop 20
         end if
 
@@ -35,7 +35,7 @@ contains
             end if
         end do
 
-        print *, "Number of atoms:", arraySize
+        print *, 'Number of atoms:', arraySize
 
         rewind(unit)
         call initMolecule(m, arraySize)

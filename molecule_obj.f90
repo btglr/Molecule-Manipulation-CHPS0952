@@ -28,7 +28,7 @@ contains
         allocate(m%atoms(size), stat = ok)
 
         if(ok /= 0) then
-            print '(a)', "Error during the array allocation ==> aborting"
+            print '(a)', 'Error during the array allocation ==> aborting'
             stop 666
         end if
 
@@ -64,7 +64,7 @@ contains
         deallocate(m%atoms, stat = ok)
 
         if(ok /= 0) then
-            print '(a)', "Error during the atoms array deallocation"
+            print '(a)', 'Error during the atoms array deallocation'
             stop 666
         end if
     end subroutine removeMolecule
@@ -74,7 +74,7 @@ contains
         real, dimension(:), intent(in) :: translationVector
         integer :: atomIndex
 
-        print *, "Translation vector:", translationVector
+        print *, 'Translation vector:', translationVector
 
         m%translationVector = m%translationVector + translationVector
 
@@ -112,8 +112,8 @@ contains
             end do
         end do
 
-        print '(a35, 1x, i8, 1x, i8)', "Two furthest atoms: ", firstAtomIndex, secondAtomIndex
-        print '(a35, 1x, f8.3, a)', "Distance between the two atoms: ", maxDistance, " Å"
+        print '(a35, 1x, i8, 1x, i8)', 'Two furthest atoms: ', firstAtomIndex, secondAtomIndex
+        print '(a35, 1x, f8.3, a)', 'Distance between the two atoms: ', maxDistance, ' Å'
     end subroutine furthestAtoms
 
     subroutine rotateMoleculeGlobally(m, angleInDegrees)
@@ -150,8 +150,8 @@ contains
             call rotateAtom(m%atoms(atomIndex), rotationMatrix, getCoordinates(secondAtom))
         end do
 
-        print '(a35, 1x, 3(f8.3))', "Axis vector: ", u
-        print '(a35, 1x, 3(f8.3))', "Normalized Axis vector: ", unorm
+        print '(a35, 1x, 3(f8.3))', 'Axis vector: ', u
+        print '(a35, 1x, 3(f8.3))', 'Normalized Axis vector: ', unorm
     end subroutine rotateMoleculeGlobally
 
     subroutine rotateMoleculeInternally(m, angleInDegrees)
@@ -218,7 +218,7 @@ contains
         logical :: sameMolecule
 
         if (getNumberOfAtoms(m1) /= getNumberOfAtoms(m2)) then
-            print '(a)', "Error: the molecules do not have the same number of atoms ==> aborting"
+            print '(a)', 'Error: the molecules do not have the same number of atoms ==> aborting'
             stop 20
         end if
 
@@ -235,22 +235,22 @@ contains
         end do
 
         if (sameMolecule.eqv..FALSE.) then
-            print '(a)', "Error: the molecules are not identical ==> aborting"
+            print '(a)', 'Error: the molecules are not identical ==> aborting'
             stop 20
         end if
 
-        if (type == "standard") then
-            print '(a25,i8)', "Number of atoms:", numberOfAtoms
+        if (type == 'standard') then
+            print '(a25,i8)', 'Number of atoms:', numberOfAtoms
             allocate(difference(numberOfAtoms, 3))
 
             do atomIndex = 1, numberOfAtoms
                 difference(atomIndex, :) = getCoordinates(getAtom(m1, atomIndex)) - getCoordinates(getAtom(m2, atomIndex))
             end do
-        else if (type == "heavy") then
+        else if (type == 'heavy') then
             numberOfHeavyAtoms = 0
 
             do atomIndex = 1, numberOfAtoms
-                if (getAtomName(getAtom(m1, atomIndex)) /= "H") then
+                if (getAtomName(getAtom(m1, atomIndex)) /= 'H') then
                     numberOfHeavyAtoms = numberOfHeavyAtoms + 1
                 end if
             end do
@@ -262,12 +262,12 @@ contains
             end do
 
             numberOfAtoms = numberOfHeavyAtoms
-            print '(a25,i8)', "Number of heavy atoms:", numberOfAtoms
+            print '(a25,i8)', 'Number of heavy atoms:', numberOfAtoms
         else
             stop 20
         end if
 
-        print '(a25,f8.0)', "Sum:", sum(difference ** 2)
+        print '(a25,f8.0)', 'Sum:', sum(difference ** 2)
 
         rmsd = sqrt(sum(difference ** 2) / numberOfAtoms)
     end function computeRMSD
@@ -352,7 +352,7 @@ contains
         allocate(atoms(atomsOfElement), stat = ok)
 
         if(ok /= 0) then
-            print '(a)', "Error during the array allocation ==> aborting"
+            print '(a)', 'Error during the array allocation ==> aborting'
             stop 666
         end if
 

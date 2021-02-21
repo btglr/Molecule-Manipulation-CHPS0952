@@ -10,7 +10,7 @@ program RMSD
     real :: rmsdValue
 
     if(iargc() /= 2) then
-        print '(a)', "Please provide two XYZ files to read"
+        print '(a)', 'Please provide two XYZ files to read'
         stop 10
     end if
 
@@ -23,11 +23,11 @@ program RMSD
     call readXYZ(firstMolecule, firstXYZ, 12)
     call readXYZ(secondMolecule, secondXYZ, 13)
 
-    rmsdValue = computeRMSD(firstMolecule, secondMolecule, type = "standard")
+    rmsdValue = computeRMSD(firstMolecule, secondMolecule, type = 'standard')
 
-    print '(a25,f8.3)', "RMSD Standard:", rmsdValue
+    print '(a25,f8.3)', 'RMSD Standard:', rmsdValue
 
-    rmsdValue = computeRMSD(firstMolecule, secondMolecule, type = "heavy")
+    rmsdValue = computeRMSD(firstMolecule, secondMolecule, type = 'heavy')
 
-    print '(a25,f8.3)', "RMSD Heavy:", rmsdValue
+    print '(a25,f8.3)', 'RMSD Heavy:', rmsdValue
 end program RMSD

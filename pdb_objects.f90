@@ -59,7 +59,7 @@ contains
         allocate(m%atoms(size), stat = ok)
 
         if(ok /= 0) then
-            print '(a)', "Error during the array allocation ==> aborting"
+            print '(a)', 'Error during the array allocation ==> aborting'
             stop 666
         end if
 
@@ -91,7 +91,7 @@ contains
         deallocate(m%atoms, stat = ok)
 
         if(ok /= 0) then
-            print '(a)', "Error during the atoms array deallocation"
+            print '(a)', 'Error during the atoms array deallocation'
             stop 666
         end if
     end subroutine remove_molecule
@@ -121,7 +121,7 @@ contains
         real, dimension(:), intent(in) :: translationVector
         integer :: atomIndex
 
-        print *, "Translation vector:", translationVector
+        print *, 'Translation vector:', translationVector
 
         call init_molecule(translatedMolecule, originalMolecule%nbAtoms)
 

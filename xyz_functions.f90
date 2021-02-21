@@ -26,7 +26,7 @@ contains
         end if
 
         if(ok /= 0) then
-            print '(a, 4x, a)', "Error occurred while opening file", fileName
+            print '(a, 4x, a)', 'Error occurred while opening file', fileName
             stop 20
         end if
 
@@ -36,9 +36,9 @@ contains
         internalRotationAngle = getInternalRotationAngle(m)
 
         write(comment, '(a20, 3(f8.3), 1x, a30, f8.3, 1x, a30, f5.3)') &
-                "Translation: ", translationVector, &
-                "Global rotation angle: ", globalRotationAngle, &
-                "Internal rotation angle: ", internalRotationAngle
+                'Translation: ', translationVector, &
+                'Global rotation angle: ', globalRotationAngle, &
+                'Internal rotation angle: ', internalRotationAngle
         write (nbAtomsC, '(i8)') nbAtoms
 
         write(unit, '(a)') adjustl(nbAtomsC)
@@ -58,7 +58,7 @@ contains
 
     subroutine readXYZ(m, filename, unit)
         class(molecule), intent(inout) :: m
-        character(*), intent(in) :: fileName
+        character(*), intent(in) :: filename
         integer, intent(in) :: unit
 
         character(len = 128) :: line
@@ -70,17 +70,17 @@ contains
         real, dimension(3) :: translationVector
         real :: globalRotationAngle, internalRotationAngle
 
-        inquire(file = fileName, exist = exist)
+        inquire(file = filename, exist = exist)
 
         if (exist) then
-            open(unit, file = fileName, status = 'old', iostat = ok)
+            open(unit, file = filename, status = 'old', iostat = ok)
         else
-            print '(a, 4x, a)', "File ", fileName, " doesn't exist"
+            print '(a, 1x, a, a)', 'File', adjustl(trim(filename)), ' doesn''t exist'
             stop 20
         end if
 
         if(ok /= 0) then
-            print '(a, 4x, a)', "Error occurred while opening file", fileName
+            print '(a, 1x, a)', 'Error occurred while opening file', adjustl(trim(filename))
             stop 20
         end if
 

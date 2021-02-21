@@ -16,7 +16,7 @@ program ReadPDBObject
     integer :: stat
 
     if (iargc() < 1) then
-        print '(a)', "Please provide a PDB file to open"
+        print '(a)', 'Please provide a PDB file to open'
         stop 10
     end if
 
@@ -27,12 +27,12 @@ program ReadPDBObject
         read(numberOfFilesChar, *, iostat = stat) numberOfFiles
 
         if (stat /= 0) then
-            print '(a)', "Second argument was not of type integer"
+            print '(a)', 'Second argument was not of type integer'
             stop 10
         end if
 
         if (numberOfFiles <= 0) then
-            print '(a)', "Second argument should be a strictly positive integer"
+            print '(a)', 'Second argument should be a strictly positive integer'
             stop 10
         end if
     else
@@ -49,8 +49,8 @@ program ReadPDBObject
     inputFile = trim(inputFile)
     basename = trim(getNameFromPath(inputFile))
 
-    print '(a, a)', "File to read: ", inputFile
-    print '(a, a)', "Number of output XYZ files to generate: ", adjustl(numberOfFilesChar)
+    print '(a, a)', 'File to read: ', inputFile
+    print '(a, a)', 'Number of output XYZ files to generate: ', adjustl(numberOfFilesChar)
 
     call readPDB(originalMolecule, inputFile)
     call readVdW(manager, 'VdW_radii.txt')
@@ -70,10 +70,10 @@ program ReadPDBObject
         call checkTopology(currentMolecule, manager)
 
         if (isValidTopology(currentMolecule)) then
-            outputFile = adjustl(trim(outputDirectory)) // '/' // trim(basename) // "_" // trim(currentFileChar) // ".xyz"
+            outputFile = adjustl(trim(outputDirectory)) // '/' // trim(basename) // '_' // trim(currentFileChar) // '.xyz'
         else
-            outputFile = adjustl(trim(outputDirectory)) // '/NON_VALIDE_' // trim(basename) // "_" // &
-                    trim(currentFileChar) // ".xyz"
+            outputFile = adjustl(trim(outputDirectory)) // '/NON_VALIDE_' // trim(basename) // '_' // &
+                    trim(currentFileChar) // '.xyz'
         end if
 
         call writeXYZ(currentMolecule, outputFile)
