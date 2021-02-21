@@ -13,5 +13,5 @@ program VdWTest
     print *, manager
 
     print '(a, x, a2)', 'Getting one radius from element', 'Ba'
-    print *, getVdWRadius(manager, 'Ba')
+    print *, getVdWObject(manager, 'Ba')
 end program VdWTest

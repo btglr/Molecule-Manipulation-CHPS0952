@@ -95,7 +95,7 @@ contains
         close(unit)
     end subroutine readVdW
 
-    function getVdWRadius(manager, element) result(radius)
+    function getVdWObject(manager, element) result(radius)
         class(VdWManager), intent(in) :: manager
         character(*), intent(in) :: element
 
@@ -103,10 +103,10 @@ contains
         integer :: i
 
         do i = 1, manager%numberOfRadii
-            if (adjustl(getVdWRadiusElement(manager%radii(i))) == element) then
+            if (adjustl(getVdWElement(manager%radii(i))) == element) then
                 radius = manager%radii(i)
                 exit
             end if
         end do
-    end function getVdWRadius
+    end function getVdWObject
 end module vdw_manager

@@ -28,11 +28,11 @@ contains
         999 format(a2, x, f6.4, /)
     end subroutine printRadius
 
-    function getVdWRadiusElement(vr) result(element)
+    function getVdWElement(vr) result(element)
         class(VdWRadius), intent(in) :: vr
 
         character(len = 2) :: element
 
         element = vr%element
-    end function getVdWRadiusElement
+    end function getVdWElement
 end module vdw_obj
