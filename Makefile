@@ -2,7 +2,7 @@ CC=gfortran
 FLAGS=-fcheck=all -Wunused -pedantic -fimplicit-none
 #CC=ifort
 
-EXEC = ReadPDB RMSD MoleculeManipulation VdWTest
+EXEC = ReadPDB RMSD VdWTest
 all: $(EXEC)
 
 RMSD: vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o xyz_functions.o RMSD.o
@@ -10,10 +10,6 @@ RMSD: vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o xyz_functions.o RMSD.o
 	-@$(CC) $(FLAGS) -o $@.out $+
 
 ReadPDB: utilities.o vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o pdb_functions.o xyz_functions.o ReadPDB.o
-	-@echo "Linking    $(@)"
-	-@$(CC) $(FLAGS) -o $@.out $+
-
-MoleculeManipulation: vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o xyz_functions.o MoleculeManipulation.o
 	-@echo "Linking    $(@)"
 	-@$(CC) $(FLAGS) -o $@.out $+
 
