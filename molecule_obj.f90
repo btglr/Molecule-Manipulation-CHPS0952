@@ -7,7 +7,7 @@ module molecule_obj
         type(atom), dimension(:), allocatable, private :: atoms
         integer, private :: numberOfAtoms
         real, dimension(3), private :: translationVector
-        real, private :: globalRotationAngle
+        real, private :: globalRotationAngle, internalRotationAngle
         logical, private :: validTopology
     contains
         procedure :: displayMolecule
@@ -35,6 +35,7 @@ contains
         m%numberOfAtoms = 0
         m%translationVector = 0.0
         m%globalRotationAngle = 0.0
+        m%internalRotationAngle = 0.0
         m%validTopology = .TRUE.
     end subroutine initMolecule
 
@@ -197,6 +198,8 @@ contains
         rotationMatrix = identityMatrix + sin(theta) * wRodrigues + (1.0 - cos(theta)) * &
                 matMul(wRodrigues, wRodrigues)
 
+        m%internalRotationAngle = m%internalRotationAngle + angleInDegrees
+
         do atomIndex = carbonBonds(selectedBond, 2), m%numberOfAtoms
             call rotateAtom(m%atoms(atomIndex), rotationMatrix, getCoordinates(secondAtom))
         end do
@@ -317,6 +320,19 @@ contains
 
         m%globalRotationAngle = globalRotationAngle
     end subroutine setGlobalRotationAngle
+
+    type(real) function getInternalRotationAngle(m) result(rotationAngle)
+        class(molecule), intent(in) :: m
+
+        internalRotationAngle = m%internalRotationAngle
+    end function getInternalRotationAngle
+
+    subroutine setInternalRotationAngle(m, internalRotationAngle)
+        class(molecule), intent(inout) :: m
+        real, intent(in) :: internalRotationAngle
+
+        m%internalRotationAngle = internalRotationAngle
+    end subroutine setInternalRotationAngle
 
     function filterByElement(m, element) result(atoms)
         class(molecule), intent(in) :: m

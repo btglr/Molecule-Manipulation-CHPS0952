@@ -14,7 +14,7 @@ contains
         logical :: exist
         type(atom) :: at
         real, dimension(3) :: atomCoordinates, translationVector
-        real :: globalRotationAngle
+        real :: globalRotationAngle, internalRotationAngle
 
         unit = 11
         inquire(file = fileName, exist = exist)
@@ -33,10 +33,12 @@ contains
         nbAtoms = getNumberOfAtoms(m)
         translationVector = getTranslationVector(m)
         globalRotationAngle = getGlobalRotationAngle(m)
+        internalRotationAngle = getInternalRotationAngle(m)
 
-        write(comment, '(a20,3(f8.3),x,a20,f8.3)') &
+        write(comment, '(a20,3(f8.3),x,a30,f8.3,x,a30,f5.3)') &
                 "Translation: ", translationVector, &
-                "Global rotation angle: ", globalRotationAngle
+                "Global rotation angle: ", globalRotationAngle, &
+                "Internal rotation angle: ", internalRotationAngle
         write (nbAtomsC, '(i8)') nbAtoms
 
         write(unit, '(a)') adjustl(nbAtomsC)
@@ -66,7 +68,7 @@ contains
         real :: x, y, z
         type(atom) :: currentAtom
         real, dimension(3) :: translationVector
-        real :: globalRotationAngle
+        real :: globalRotationAngle, internalRotationAngle
 
         inquire(file = fileName, exist = exist)
 
@@ -87,10 +89,11 @@ contains
         call initMolecule(m, numberOfAtoms)
 
         ! La ligne du commentaire
-        read(unit, '(20x,3(f8.3),21x,f8.3)', iostat = end) translationVector, globalRotationAngle
+        read(unit, '(20x,3(f8.3),31x,f8.3,31x,f5.3)', iostat = end) translationVector, globalRotationAngle, internalRotationAngle
 
         call setTranslationVector(m, translationVector)
         call setGlobalRotationAngle(m, globalRotationAngle)
+        call setInternalRotationAngle(m, internalRotationAngle)
 
         do
             read(unit, '(a)', iostat = end) line
