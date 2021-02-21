@@ -11,8 +11,8 @@ contains
         type(atom) :: currentAtom
         character(len = 2) :: elementSymbol
         character(len = 128) :: line
+        integer :: arraySize, end, idx, ok, unit
         real :: x, y, z
-        integer :: end, ok, idx, arraySize, unit
 
         unit = 10
         open(unit, file = pdbFile, iostat = ok, status = 'old')

@@ -3,8 +3,10 @@ module vdw_obj
         character(:), allocatable, private :: element
         real, private :: radius
     contains
-        procedure :: printRadius
         procedure :: initVdWRadius
+        procedure :: printRadius
+        procedure :: getVdWElement
+        procedure :: getVdWRadius
         generic :: write(formatted) => printRadius
     end type VdWRadius
 contains
@@ -28,15 +30,13 @@ contains
         999 format(a2, 1x, f6.4, /)
     end subroutine printRadius
 
-    function getVdWElement(vr) result(element)
+    pure elemental character function getVdWElement(vr) result(element)
         class(VdWRadius), intent(in) :: vr
-
-        character(len = 2) :: element
 
         element = vr%element
     end function getVdWElement
 
-    type(real) function getVdWRadius(vr) result(radius)
+    pure elemental real function getVdWRadius(vr) result(radius)
         class(VdWRadius), intent(in) :: vr
 
         radius = vr%radius

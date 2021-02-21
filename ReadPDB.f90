@@ -6,14 +6,13 @@ program ReadPDBObject
     use utilities
     implicit none
 
-    integer :: numberOfFiles, currentOutputFile
-    character(len = 128) :: inputFile, outputFile, basename, outputDirectory
-    character(len = 4) :: numberOfFilesChar, currentFileChar
-    real :: globalRotationAngleInDegrees, internalRotationAngleInDegrees
     type(molecule) :: currentMolecule, originalMolecule
     type(VdWManager) :: manager
+    character(len = 4) :: currentFileChar, numberOfFilesChar
+    character(len = 128) :: basename, inputFile, outputDirectory, outputFile
+    integer :: currentOutputFile, numberOfFiles, stat
+    real :: globalRotationAngleInDegrees, internalRotationAngleInDegrees
     real, dimension(3) :: translationVector
-    integer :: stat
 
     if (iargc() < 1) then
         print '(a)', 'Please provide a PDB file to open'

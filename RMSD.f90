@@ -5,8 +5,8 @@ program RMSD
 
     implicit none
 
-    character(len = 128) :: firstXYZ, secondXYZ
     type(molecule) :: firstMolecule, secondMolecule
+    character(len = 128) :: firstXYZ, secondXYZ
     real :: rmsdValue
 
     if(iargc() /= 2) then

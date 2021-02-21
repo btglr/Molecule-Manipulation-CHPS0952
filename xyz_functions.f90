@@ -8,13 +8,13 @@ contains
         class(molecule), intent(in) :: m
         character(*), intent(in) :: fileName
 
-        character(len = 8) :: nbAtomsC, atomName
-        character(len = 512) :: comment
-        integer :: ok, atomIndex, unit, nbAtoms
-        logical :: exist
         type(atom) :: at
-        real, dimension(3) :: atomCoordinates, translationVector
+        character(len = 8) :: atomName, nbAtomsC
+        character(len = 512) :: comment
+        integer :: atomIndex, nbAtoms, ok, unit
+        logical :: exist
         real :: globalRotationAngle, internalRotationAngle
+        real, dimension(3) :: atomCoordinates, translationVector
 
         unit = 11
         inquire(file = fileName, exist = exist)
@@ -61,14 +61,13 @@ contains
         character(*), intent(in) :: filename
         integer, intent(in) :: unit
 
-        character(len = 128) :: line
+        type(atom) :: currentAtom
         character(len = 2) :: atomName
+        character(len = 128) :: line
         integer :: ok, numberOfAtoms, end
         logical :: exist
-        real :: x, y, z
-        type(atom) :: currentAtom
+        real :: globalRotationAngle, internalRotationAngle, x, y, z
         real, dimension(3) :: translationVector
-        real :: globalRotationAngle, internalRotationAngle
 
         inquire(file = filename, exist = exist)
 

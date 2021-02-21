@@ -9,6 +9,7 @@ module vdw_manager
         procedure :: initVdWManager
         procedure :: addVdWRadius
         procedure :: readVdW
+        procedure :: getVdWObject
         generic :: write(formatted) => printRadii
     end type VdWManager
 contains
@@ -26,6 +27,7 @@ contains
     subroutine initVdWManager(manager, size)
         class(VdWManager), intent(inout) :: manager
         integer, intent(in) :: size
+
         integer :: ok
 
         allocate(manager%radii(size), stat = ok)
@@ -53,7 +55,7 @@ contains
         type(VdWRadius) :: currentRadius
         character(len = 2) :: element
         character(len = 10) :: line
-        integer :: end, ok, arraySize, unit
+        integer :: arraySize, end, ok, unit
         real :: radius
 
         unit = 20
@@ -106,7 +108,7 @@ contains
         integer :: i
 
         do i = 1, manager%numberOfRadii
-            if (adjustl(getVdWElement(manager%radii(i))) == element) then
+            if (adjustl(trim(getVdWElement(manager%radii(i)))) == element) then
                 radius = manager%radii(i)
                 exit
             end if
