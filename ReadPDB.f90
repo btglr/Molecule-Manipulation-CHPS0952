@@ -9,7 +9,7 @@ program ReadPDBObject
     integer :: i, end, ok, idx, arraySize, unit, numberOfFiles, currentOutputFile
     character(len = 128) :: inputFile, outputFile, basename, line, newFileName, outputDirectory
     character(len = 4) :: atomName, elementSymbol, numberOfFilesChar, currentFileChar
-    real :: x, y, z, angleInDegrees
+    real :: x, y, z, globalRotationAngleInDegrees, internalRotationAngleInDegrees
     type(atom) :: currentAtom
     type(atom), dimension(:), allocatable :: atoms
     type(molecule) :: currentMolecule, originalMolecule
@@ -63,11 +63,12 @@ program ReadPDBObject
         currentMolecule = originalMolecule
 
         call random_number(translationVector)
-        call random_number(angleInDegrees)
+        call random_number(globalRotationAngleInDegrees)
+        call random_number(internalRotationAngleInDegrees)
 
         call translateMolecule(currentMolecule, translationVector)
-        call rotateMoleculeGlobally(currentMolecule, angleInDegrees * 360.0)
-        call rotateMoleculeInternally(currentMolecule, 2.0)
+        call rotateMoleculeGlobally(currentMolecule, globalRotationAngleInDegrees * 360.0)
+        call rotateMoleculeInternally(currentMolecule, internalRotationAngleInDegrees * 10.0)
         call checkTopology(currentMolecule, manager)
 
         if (isValidTopology(currentMolecule)) then
