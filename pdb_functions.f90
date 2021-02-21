@@ -9,7 +9,7 @@ contains
         character(len = 128), intent(in) :: pdbFile
 
         type(atom) :: currentAtom
-        character(len = 4) :: atomName, elementSymbol
+        character(len = 2) :: elementSymbol
         character(len = 128) :: line
         real :: x, y, z
         integer :: end, ok, idx, arraySize, unit
@@ -46,7 +46,7 @@ contains
                 exit
             else
                 if(line(1:6) == 'ATOM') then
-                    read(line, '(6x, i5, 2x, a4, 14x, 3(f8.3), 22x, a2)') idx, atomName, x, y, z, elementSymbol
+                    read(line, '(6x, i5, 19x, 3(f8.3), 23x, a2)') idx, x, y, z, elementSymbol
                     call initAtom(currentAtom, elementSymbol, (/x, y, z/))
                     call addAtom(m, currentAtom)
                 end if

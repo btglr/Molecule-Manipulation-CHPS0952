@@ -26,9 +26,8 @@ contains
         integer, intent(in) :: v_list(:)        ! parameters from fmt spec.
         integer, intent(out) :: iostat          ! non zero on error, etc.
         character(*), intent(inout) :: iomsg    ! define if iostat non zero.
-        write (unit, 999, IOSTAT = iostat, IOMSG = iomsg) at%atomName, at%coordinates(1), at%coordinates(2), &
-                at%coordinates(3)
-        999 format(a4, 1x, 3(f8.3, 1x), /)
+        write (unit, 999, IOSTAT = iostat, IOMSG = iomsg) at%atomName, at%coordinates
+        999 format(a2, 1x, 3(f8.3, 1x), /)
     end subroutine displayAtom
 
     subroutine translateAtom(at, translationVector)
