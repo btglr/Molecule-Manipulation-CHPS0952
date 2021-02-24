@@ -1,8 +1,7 @@
 CC=gfortran
 FLAGS=-fcheck=all -Wunused -pedantic -fimplicit-none
-#CC=ifort
 
-EXEC = ReadPDB RMSD VdWTest
+EXEC = ReadPDB RMSD
 all: $(EXEC)
 
 RMSD: vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o xyz_functions.o RMSD.o
@@ -13,15 +12,10 @@ ReadPDB: utilities.o vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o pdb_funct
 	-@echo "Linking    $(@)"
 	-@$(CC) $(FLAGS) -o $@.out $+
 
-VdWTest: vdw_obj.o vdw_manager.o VdWTest.o
-	-@echo "Linking    $(@)"
-	-@$(CC) $(FLAGS) -o $@.out $+
-
 %.o: %.f90
 	-@echo ""
 	-@echo "Generating $@"
 	-@$(CC) $(FLAGS) -c $<
-
 
 help:
 	@echo "(C) JC.Boisson"
