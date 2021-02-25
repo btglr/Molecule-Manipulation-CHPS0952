@@ -231,6 +231,8 @@ contains
 
         print '(a40, 1x, 3(f8.3))', 'Axis vector: ', u
         print '(a40, 1x, 3(f8.3))', 'Normalized Axis vector: ', unorm
+
+        deallocate(carbonBonds)
     end subroutine rotateMoleculeInternally
 
     real function computeRMSD(m1, m2, type) result(rmsd)
