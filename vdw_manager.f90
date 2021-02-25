@@ -114,4 +114,10 @@ contains
             end if
         end do
     end function getVdWObject
+
+    subroutine removeVdWManager(manager)
+        class(VdWManager), intent(in) :: manager
+
+        deallocate(manager%radii)
+    end subroutine removeVdWManager
 end module vdw_manager
