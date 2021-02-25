@@ -4,11 +4,11 @@ FLAGS=-fcheck=all -Wunused -pedantic -fimplicit-none
 EXEC = ReadPDB RMSD
 all: $(EXEC)
 
-RMSD: vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o xyz_functions.o RMSD.o
+RMSD: transformation_obj.o vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o xyz_functions.o RMSD.o
 	-@echo "Linking    $(@)"
 	-@$(CC) $(FLAGS) -o $@.out $+
 
-ReadPDB: utilities.o vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o pdb_functions.o xyz_functions.o ReadPDB.o
+ReadPDB: utilities.o transformation_obj.o vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o pdb_functions.o xyz_functions.o ReadPDB.o
 	-@echo "Linking    $(@)"
 	-@$(CC) $(FLAGS) -o $@.out $+
 

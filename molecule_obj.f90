@@ -2,10 +2,12 @@ module molecule_obj
     use atom_obj
     use vdw_obj
     use vdw_manager
+    use transformation_obj
 
     type molecule
         type(atom), dimension(:), allocatable, private :: atoms
-        integer, private :: numberOfAtoms
+        type(transformation), dimension(:), allocatable, private :: transformations, tmpTransformations
+        integer, private :: numberOfAtoms, numberOfTransformations
         logical, private :: validTopology
         real, private :: globalRotationAngle, internalRotationAngle
         real, dimension(3), private :: translationVector
@@ -22,16 +24,11 @@ module molecule_obj
         procedure :: getNumberOfAtoms
         procedure :: getAtom
         procedure :: setAtom
-        procedure :: getTranslationVector
-        procedure :: setTranslationVector
-        procedure :: getGlobalRotationAngle
-        procedure :: setGlobalRotationAngle
-        procedure :: getInternalRotationAngle
-        procedure :: setInternalRotationAngle
         procedure :: filterByElement
         procedure :: getCarbonBonds
         procedure :: checkTopology
         procedure :: isValidTopology
+        procedure :: getTransformations
         generic :: write(formatted) => displayMolecule
     end type molecule
 contains
@@ -49,10 +46,8 @@ contains
         end if
 
         m%numberOfAtoms = 0
+        m%numberOfTransformations = 0
         m%validTopology = .TRUE.
-        m%globalRotationAngle = 0.0
-        m%internalRotationAngle = 0.0
-        m%translationVector = 0.0
     end subroutine initMolecule
 
     subroutine addAtom(m, at)
@@ -83,29 +78,40 @@ contains
             print '(a)', 'Error during the atoms array deallocation'
             stop 666
         end if
+
+        if (m%numberOfTransformations > 0) then
+            deallocate(m%transformations, stat = ok)
+
+            if(ok /= 0) then
+                print '(a)', 'Error during the molecule transformations deallocation'
+                stop 666
+            end if
+        end if
     end subroutine removeMolecule
 
     subroutine translateMolecule(m, translationVector)
         class(molecule), intent(inout) :: m
         real, dimension(:), intent(in) :: translationVector
 
+        type(transformation) :: t
         integer :: atomIndex
 
         print '(/, a40)', '=== Translating molecule ==='
         print '(/, a40, 3(f8.3))', 'Translation vector: ', translationVector
 
-        m%translationVector = m%translationVector + translationVector
-
         do atomIndex = 1, m%numberOfAtoms
             call translateAtom(m%atoms(atomIndex), translationVector)
         end do
+
+        call initTranslation(t, translationVector)
+        call addTransformation(m, t)
     end subroutine translateMolecule
 
-    subroutine furthestAtoms(m, firstAtom, secondAtom)
+    subroutine furthestAtoms(m, firstAtomIndex, secondAtomIndex)
         class(molecule), intent(in) :: m
-        type(atom), intent(inout) :: firstAtom, secondAtom
+        integer, intent(inout) :: firstAtomIndex, secondAtomIndex
 
-        integer :: atomIndex, firstAtomIndex, numberOfAtoms, otherAtomIndex, secondAtomIndex
+        integer :: atomIndex, numberOfAtoms, otherAtomIndex
         real :: distance, maxDistance
         real, dimension(3) :: currentCoords, otherCoords
 
@@ -122,9 +128,6 @@ contains
                 if (distance > maxDistance) then
                     maxDistance = distance
 
-                    firstAtom = getAtom(m, atomIndex)
-                    secondAtom = getAtom(m, otherAtomIndex)
-
                     firstAtomIndex = atomIndex
                     secondAtomIndex = otherAtomIndex
                 end if
@@ -140,7 +143,8 @@ contains
         real, intent(in) :: angleInDegrees
 
         type(atom) :: firstAtom, secondAtom
-        integer :: atomIndex, i, j
+        type(transformation) :: t
+        integer :: atomIndex, firstAtomIndex, i, j, secondAtomIndex
         integer, dimension(3, 3) :: identityMatrix
         real :: PI, theta
         real, dimension(3) :: u, unorm
@@ -152,7 +156,10 @@ contains
         PI = 4.D0 * datan(1.D0)
         theta = angleInDegrees * PI / 180
 
-        call furthestAtoms(m, firstAtom, secondAtom)
+        call furthestAtoms(m, firstAtomIndex, secondAtomIndex)
+
+        firstAtom = getAtom(m, firstAtomIndex)
+        secondAtom = getAtom(m, secondAtomIndex)
 
         u = firstAtom - secondAtom
         unorm = u / norm2(u)
@@ -166,14 +173,15 @@ contains
         rotationMatrix = identityMatrix + sin(theta) * wRodrigues + (1.0 - cos(theta)) * &
                 matMul(wRodrigues, wRodrigues)
 
-        m%globalRotationAngle = m%globalRotationAngle + angleInDegrees
-
         do atomIndex = 1, getNumberOfAtoms(m)
             call rotateAtom(m%atoms(atomIndex), rotationMatrix, getCoordinates(secondAtom))
         end do
 
         print '(a40, 1x, 3(f8.3))', 'Axis vector: ', u
         print '(a40, 1x, 3(f8.3))', 'Normalized Axis vector: ', unorm
+
+        call initGlobalRotation(t, [firstAtomIndex, secondAtomIndex], angleInDegrees)
+        call addTransformation(m, t)
     end subroutine rotateMoleculeGlobally
 
     subroutine rotateMoleculeInternally(m, angleInDegrees)
@@ -181,6 +189,7 @@ contains
         real, intent(in) :: angleInDegrees
 
         type(atom) :: firstAtom, secondAtom
+        type(transformation) :: t
         integer :: atomIndex, i, j, numberOfCarbonBonds, selectedBond
         integer, dimension(3, 3) :: identityMatrix
         integer, dimension(:, :), allocatable :: carbonBonds
@@ -223,14 +232,15 @@ contains
         rotationMatrix = identityMatrix + sin(theta) * wRodrigues + (1.0 - cos(theta)) * &
                 matMul(wRodrigues, wRodrigues)
 
-        m%internalRotationAngle = m%internalRotationAngle + angleInDegrees
-
         do atomIndex = carbonBonds(selectedBond, 2), m%numberOfAtoms
             call rotateAtom(m%atoms(atomIndex), rotationMatrix, getCoordinates(secondAtom))
         end do
 
         print '(a40, 1x, 3(f8.3))', 'Axis vector: ', u
         print '(a40, 1x, 3(f8.3))', 'Normalized Axis vector: ', unorm
+
+        call initInternalRotation(t, [carbonBonds(selectedBond, 1), carbonBonds(selectedBond, 2)], angleInDegrees)
+        call addTransformation(m, t)
 
         deallocate(carbonBonds)
     end subroutine rotateMoleculeInternally
@@ -321,47 +331,6 @@ contains
 
         m%atoms(atomIndex) = at
     end subroutine setAtom
-
-    pure function getTranslationVector(m) result(translationVector)
-        class(molecule), intent(in) :: m
-
-        real, dimension(3) :: translationVector
-
-        translationVector = m%translationVector
-    end function getTranslationVector
-
-    subroutine setTranslationVector(m, translationVector)
-        class(molecule), intent(inout) :: m
-        real, dimension(3), intent(in) :: translationVector
-
-        m%translationVector = translationVector
-    end subroutine setTranslationVector
-
-    pure elemental real function getGlobalRotationAngle(m) result(globalRotationAngle)
-        class(molecule), intent(in) :: m
-
-        globalRotationAngle = m%globalRotationAngle
-    end function getGlobalRotationAngle
-
-    subroutine setGlobalRotationAngle(m, globalRotationAngle)
-        class(molecule), intent(inout) :: m
-        real, intent(in) :: globalRotationAngle
-
-        m%globalRotationAngle = globalRotationAngle
-    end subroutine setGlobalRotationAngle
-
-    pure elemental real function getInternalRotationAngle(m) result(internalRotationAngle)
-        class(molecule), intent(in) :: m
-
-        internalRotationAngle = m%internalRotationAngle
-    end function getInternalRotationAngle
-
-    subroutine setInternalRotationAngle(m, internalRotationAngle)
-        class(molecule), intent(inout) :: m
-        real, intent(in) :: internalRotationAngle
-
-        m%internalRotationAngle = internalRotationAngle
-    end subroutine setInternalRotationAngle
 
     function filterByElement(m, element) result(atoms)
         class(molecule), intent(in) :: m
@@ -465,5 +434,40 @@ contains
 
         validTopology = m%validTopology
     end function isValidTopology
+
+    pure function getTransformations(m) result(ts)
+        class(molecule), intent(in) :: m
+
+        type(transformation), dimension(size(m%transformations)) :: ts
+
+        ts = m%transformations
+    end function getTransformations
+
+    pure function getTransformation(m, index) result(t)
+        class(molecule), intent(in) :: m
+        integer, intent(in) :: index
+
+        type(transformation) :: t
+
+        t = m%transformations(index)
+    end function getTransformation
+
+    subroutine addTransformation(m, t)
+        class(molecule), intent(inout) :: m
+        type(transformation), intent(in) :: t
+
+        type(transformation), dimension(:), allocatable :: tmpTransformations
+
+        if (m%numberOfTransformations > 0) then
+            allocate(tmpTransformations(m%numberOfTransformations + 1))
+            tmpTransformations(1:m%numberOfTransformations) = m%transformations(1:m%numberOfTransformations)
+            call move_alloc(tmpTransformations, m%transformations)
+        else
+            allocate(m%transformations(m%numberOfTransformations + 1))
+        end if
+
+        m%numberOfTransformations = m%numberOfTransformations + 1
+        m%transformations(m%numberOfTransformations) = t
+    end subroutine addTransformation
 
 end module molecule_obj
