@@ -26,3 +26,8 @@ Les fichiers de sortie seront générés dans le dossier XYZ.
 ./ReadPDB.out PDB/7kah.pdb
 
 ./RMSD.out XYZ/7cmm_0001.xyz XYZ/7cmm_0003.xyz
+
+=== Commentaires ===
+
+Le commentaire des fichiers XYZ contient sur les quatre premiers caractères le nombre de transformations effectuées, puis chaque transformation dans l'ordre dans lequel elle a été effectuée.
+Ces transformations sont relues en mémoire à partir du fichier XYZ afin de pouvoir continuer à modifier une molécule qui aurait préalablement été écrite par ce même programme.
