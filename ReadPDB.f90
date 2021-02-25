@@ -80,6 +80,8 @@ program ReadPDBObject
         end if
 
         call writeXYZ(currentMolecule, outputFile)
+
+        call removeMolecule(currentMolecule)
     end do
 
     call removeVdWManager(manager)
