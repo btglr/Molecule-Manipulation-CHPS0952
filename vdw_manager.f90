@@ -116,7 +116,7 @@ contains
     end function getVdWObject
 
     subroutine removeVdWManager(manager)
-        class(VdWManager), intent(in) :: manager
+        class(VdWManager), intent(inout) :: manager
 
         deallocate(manager%radii)
     end subroutine removeVdWManager
