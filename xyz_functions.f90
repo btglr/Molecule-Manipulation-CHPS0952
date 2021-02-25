@@ -61,6 +61,7 @@ contains
 
         close(unit)
 
+        deallocate(transformations)
     end subroutine writeXYZ
 
     subroutine readXYZ(m, filename, unit)
