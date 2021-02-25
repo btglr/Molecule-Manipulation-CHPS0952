@@ -295,6 +295,8 @@ contains
         print '(a40, f12.0)', 'Sum:', sum(difference ** 2)
 
         rmsd = sqrt(sum(difference ** 2) / numberOfAtoms)
+
+        deallocate(difference)
     end function computeRMSD
 
     pure elemental integer function getNumberOfAtoms(m) result(numberOfAtoms)
