@@ -402,6 +402,8 @@ contains
 
         print '(/, a40, /)', '=== Checking topology of molecule ==='
 
+        m%validTopology = .TRUE.
+
         do firstAtomOfPair = 1, m%numberOfAtoms
             do secondAtomOfPair = firstAtomOfPair + 1, m%numberOfAtoms
                 distance = norm2(getCoordinates(m%atoms(firstAtomOfPair)) - getCoordinates(m%atoms(secondAtomOfPair)))
