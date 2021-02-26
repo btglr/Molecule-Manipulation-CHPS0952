@@ -397,25 +397,25 @@ contains
         class(molecule), intent(inout) :: m
         type(VdWManager), intent(in) :: manager
 
-        integer :: atomIndex, otherAtomIndex
+        integer :: firstAtomOfPair, secondAtomOfPair
         real :: distance, sumRadii
 
         print '(/, a40, /)', '=== Checking topology of molecule ==='
 
-        do atomIndex = 1, m%numberOfAtoms
-            do otherAtomIndex = atomIndex + 1, m%numberOfAtoms
-                distance = norm2(getCoordinates(m%atoms(atomIndex)) - getCoordinates(m%atoms(otherAtomIndex)))
-                sumRadii = getVdWRadius(getVdWObject(manager, getAtomName(m%atoms(atomIndex)))) + &
-                        getVdWRadius(getVdWObject(manager, getAtomName(m%atoms(otherAtomIndex))))
+        do firstAtomOfPair = 1, m%numberOfAtoms
+            do secondAtomOfPair = firstAtomOfPair + 1, m%numberOfAtoms
+                distance = norm2(getCoordinates(m%atoms(firstAtomOfPair)) - getCoordinates(m%atoms(secondAtomOfPair)))
+                sumRadii = getVdWRadius(getVdWObject(manager, getAtomName(m%atoms(firstAtomOfPair)))) + &
+                        getVdWRadius(getVdWObject(manager, getAtomName(m%atoms(secondAtomOfPair))))
 
                 if (distance > 0 .AND. distance / sumRadii < 0.35) then
                     m%validTopology = .FALSE.
 
                     print '(a50)', '/!\ INVALID TOPOLOGY /!\'
-                    print '(a40, 1x, i8)', 'First atom: ', atomIndex
-                    print *, m%atoms(atomIndex)
-                    print '(a40, 1x, i8)', 'Second atom: ', otherAtomIndex
-                    print *, m%atoms(otherAtomIndex)
+                    print '(a40, 1x, i8)', 'First atom: ', firstAtomOfPair
+                    print *, m%atoms(firstAtomOfPair)
+                    print '(a40, 1x, i8)', 'Second atom: ', secondAtomOfPair
+                    print *, m%atoms(secondAtomOfPair)
                     print '(a40, 1x, f8.3, a)', 'Distance: ', distance, ' Å'
                     print '(a40, 1x, f8.3, a)', 'Sum of radii: ', sumRadii, ' Å'
                     print '(a40, 1x, f8.3, a)', 'Ratio: ', distance / sumRadii, ' < 0.35'
