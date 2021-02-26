@@ -63,13 +63,7 @@ program ReadPDBObject
 
         currentMolecule = originalMolecule
 
-        call random_number(translationVector)
-        call random_number(globalRotationAngleInDegrees)
-        call random_number(internalRotationAngleInDegrees)
-
-        call translateMolecule(currentMolecule, translationVector)
-        call rotateMoleculeGlobally(currentMolecule, globalRotationAngleInDegrees * 360.0)
-        call rotateMoleculeInternally(currentMolecule, internalRotationAngleInDegrees * 10.0)
+        call printMenu(currentMolecule, manager)
         call checkTopology(currentMolecule, manager)
 
         if (isValidTopology(currentMolecule)) then
