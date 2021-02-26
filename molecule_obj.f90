@@ -403,7 +403,7 @@ contains
         print '(/, a40, /)', '=== Checking topology of molecule ==='
 
         do atomIndex = 1, m%numberOfAtoms
-            do otherAtomIndex = 1, m%numberOfAtoms
+            do otherAtomIndex = atomIndex + 1, m%numberOfAtoms
                 distance = norm2(getCoordinates(m%atoms(atomIndex)) - getCoordinates(m%atoms(otherAtomIndex)))
                 sumRadii = getVdWRadius(getVdWObject(manager, getAtomName(m%atoms(atomIndex)))) + &
                         getVdWRadius(getVdWObject(manager, getAtomName(m%atoms(otherAtomIndex))))
