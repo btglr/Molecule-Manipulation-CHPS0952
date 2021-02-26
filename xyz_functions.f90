@@ -56,7 +56,7 @@ contains
             atomName = getAtomName(at)
             atomCoordinates = getCoordinates(at)
 
-            write(unit, '(a2, 2x, 3(f8.3, 2x))') adjustl(atomName), atomCoordinates(1), atomCoordinates(2), atomCoordinates(3)
+            write(unit, '(a2, 2x, 3(f8.3, 2x))') adjustl(atomName), atomCoordinates
         end do
 
         close(unit)
@@ -109,7 +109,7 @@ contains
 
         do transformationIndex = 1, numberOfTransformations
             read(stringTransformations((((transformationIndex - 1) * 75) + 1):len(stringTransformations)), '(a75)') &
-            stringTransformation
+                    stringTransformation
             read(stringTransformation, '(1x, a20)') transformationType
 
             if (adjustl(trim(transformationType)) == 'Translation') then
