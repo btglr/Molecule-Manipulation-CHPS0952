@@ -8,7 +8,7 @@ RMSD: transformation_obj.o vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o xyz
 	-@echo "Linking    $(@)"
 	-@$(CC) $(FLAGS) -o $@.out $+
 
-ReadPDB: utilities.o transformation_obj.o vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o pdb_functions.o xyz_functions.o ReadPDB.o
+ReadPDB: transformation_obj.o vdw_obj.o vdw_manager.o atom_obj.o molecule_obj.o pdb_functions.o xyz_functions.o utilities.o ReadPDB.o
 	-@echo "Linking    $(@)"
 	-@$(CC) $(FLAGS) -o $@.out $+
 
