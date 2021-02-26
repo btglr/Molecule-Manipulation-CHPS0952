@@ -48,6 +48,13 @@ contains
         m%numberOfAtoms = 0
         m%numberOfTransformations = 0
         m%validTopology = .TRUE.
+
+        allocate(m%transformations(0), stat = ok)
+
+        if(ok /= 0) then
+            print '(a)', 'Error during the array allocation ==> aborting'
+            stop 666
+        end if
     end subroutine initMolecule
 
     subroutine addAtom(m, at)
@@ -460,13 +467,9 @@ contains
 
         type(transformation), dimension(:), allocatable :: tmpTransformations
 
-        if (m%numberOfTransformations > 0) then
-            allocate(tmpTransformations(m%numberOfTransformations + 1))
-            tmpTransformations(1:m%numberOfTransformations) = m%transformations(1:m%numberOfTransformations)
-            call move_alloc(tmpTransformations, m%transformations)
-        else
-            allocate(m%transformations(m%numberOfTransformations + 1))
-        end if
+        allocate(tmpTransformations(m%numberOfTransformations + 1))
+        tmpTransformations(1:m%numberOfTransformations) = m%transformations(1:m%numberOfTransformations)
+        call move_alloc(tmpTransformations, m%transformations)
 
         m%numberOfTransformations = m%numberOfTransformations + 1
         m%transformations(m%numberOfTransformations) = t
