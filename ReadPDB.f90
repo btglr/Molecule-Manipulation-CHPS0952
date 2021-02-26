@@ -11,8 +11,6 @@ program ReadPDBObject
     character(len = 4) :: currentFileChar, numberOfFilesChar
     character(len = 128) :: basename, inputFile, outputDirectory, outputFile
     integer :: currentOutputFile, numberOfFiles, stat
-    real :: globalRotationAngleInDegrees, internalRotationAngleInDegrees
-    real, dimension(3) :: translationVector
 
     if (iargc() < 1) then
         print '(a)', 'Please provide a PDB file to open'
